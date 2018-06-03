@@ -1,0 +1,10 @@
+certifi==2018.4.16
+chardet==3.0.4
+Django==1.11.8
+django-cors-headers==1.1.0
+httpie==0.9.9
+idna==2.6
+Pygments==2.2.0
+pytz==2018.4
+requests==2.18.4
+urllib3==1.22
