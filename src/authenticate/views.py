@@ -11,33 +11,31 @@ def loginUser(request):
             password = request.POST.get('password')
             print(username)
             print(password)
-            # stayloggedin = request.POST.get('stayloggedin')
-            # if stayloggedin == "true":
-            #     pass
-            # else:
-            #     request.session.set_expiry(0)
+            stayloggedin = request.POST.get('stayloggedin')
+            if stayloggedin == "true":
+                pass
+            else:
+                request.session.set_expiry(0)
 
             message = "Invalid Credentials"
             temp = User.objects.all()
             print(temp)
-            # user = User.objects.get(username=username)
-            # print(user.password)
-            # if user.password == password:
-            #     request.session['username'] = username
-            #     message = "Succesfully Logged in !!!"
-            #     print(message)
-            # users = User.objects
-            # print(users)
-            for user in temp:
-                if username == user.username:
-                    message = "Successfully logged in"
-                    request.session['username'] = username
+            try:
+                user = User.objects.get(username=username)
+            except:
+                message = "Invalid Credentials"
+            print(user.password)
+            if user.password == password:
+                request.session['username'] = username
+                message = "Succesfully Logged in !!!"
+                print(message)            
             res = {
                 "msg": message,
-                "username": username
+                "username": username,
+                "status": 200
             }
             print(res)
-            return HttpResponse(json.dumps(res), content_type="application/json")
+            return JsonResponse(res, safe=False)
         except Exception as e:
             print (e)
     else:
@@ -51,10 +49,14 @@ def registerUser(request):
         email = request.POST.get('email')
         flag = True
         message = ""
-        if User.objects.get(username=username) or User.objects.get(email=email):
-            message = "Username or Email already exists"
-            flag = False
-        
+        print("stage 1")
+        try:
+            if User.objects.get(username=username) or User.objects.get(email=email):
+                message = "Username or Email already exists"
+                flag = False
+        except:
+            pass
+        print("stage 2")
         if flag:
             new_user = User.objects.create(username=username, password=password, email=email, code_ids=[], code_title=[])
             new_user.save()
@@ -64,6 +66,8 @@ def registerUser(request):
         res = {
             "msg": message,
         }
+        print(res)
+        print("Stage 3")
         return JsonResponse(res, safe=False)
     else:
         return HttpResponseBadRequest()
@@ -71,8 +75,10 @@ def registerUser(request):
 
 def logoutUser(request):
     if request.is_ajax():
+        print(request.session['username'])
         del request.session['username']
         message = "Succesfully Logged out !!!"
+        print(message)
         res = {
             "msg": message
         }

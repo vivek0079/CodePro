@@ -1,6 +1,7 @@
 from django.db import models
 
 import ast
+import base64
 
 class ListField(models.TextField): #Custom ListField for Django .Ref: Django Docs
     description = "Stores a python list"
@@ -33,7 +34,7 @@ class ListField(models.TextField): #Custom ListField for Django .Ref: Django Doc
  
 #     def create(self, *args, **kwargs):
 #         try:
-#             kwargs['password'] = base64.encodestring(kwargs['password'])
+#             kwargs['password'] = base64.encodebytes(kwargs['password'])
 #         except KeyError:
 #             pass
  
