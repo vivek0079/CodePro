@@ -22,6 +22,6 @@ class Code(models.Model):
         return str(self.id)
 
     class Meta:
-        verbose_name = 'Code'
-        verbose_name_plural = 'Codes'
+        verbose_name = 'Code List'
+        verbose_name_plural = 'Code List'
         ordering = ['timestamp']

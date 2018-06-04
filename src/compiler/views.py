@@ -130,3 +130,26 @@ def viewSavedCode(request, code_id=None):
 # }
 # r = requests.post('https://api.jdoodle.com/v1/execute', data=json.dumps(compile_data), headers=headers)
 # print(r.json())
+
+
+# source = "print ('Hello')"
+# lang = "PYTHON"       
+# # isPermittedLang(lang)
+# # emptySource(source)
+
+# data = {
+#     'client_secret': CLIENT_SECRET,
+#     'async': 0,
+#     'save':1,
+#     'callback': '',
+#     'compressed': 1,
+#     'source': source,
+#     'lang': "PYTHON",
+#     'time_limit': 5,
+#     'memory_limit': 262144,
+# }
+# res = requests.post(COMPILE_URL, data=data)
+# print(res)
+# print(data)
+# print(CLIENT_SECRET)
+# return render(request, 'index.html', {})
