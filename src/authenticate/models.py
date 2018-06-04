@@ -21,31 +21,31 @@ class ListField(models.TextField): #Custom ListField for Django .Ref: Django Doc
         if value is None:
             return value
 
-        return unicode(value)
+        return str(value)
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
         return self.get_db_prep_value(value)
 
 
-class UserModelManager(models.Manager):
-    use_for_related_fields = True
+# class UserModelManager(models.Manager):
+#     use_for_related_fields = True
  
-    def create(self, *args, **kwargs):
-        try:
-            kwargs['password'] = base64.encodestring(kwargs['password'])
-        except KeyError:
-            pass
+#     def create(self, *args, **kwargs):
+#         try:
+#             kwargs['password'] = base64.encodestring(kwargs['password'])
+#         except KeyError:
+#             pass
  
-        return super(UserModeManager, self).create(*args, **kwargs)
+#         return super(UserModelManager, self).create(*args, **kwargs)
  
-    def get(self, *args, **kwargs):
-        data = super(UserModeManager, self).get(*args, **kwargs)
-        try:
-            data.password = base64.decodestring(data.password)
-        except AttributeError:
-            pass
-        return data
+#     def get(self, *args, **kwargs):
+#         data = super(UserModelManager, self).get(*args, **kwargs)
+#         try:
+#             data.password = base64.decodestring(data.password)
+#         except AttributeError:
+#             pass
+#         return data
 
 class User(models.Model):
     username    = models.CharField(max_length=15, null=False, blank=False, unique=True)
@@ -56,7 +56,7 @@ class User(models.Model):
     timestamp   = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
 
-    objects = UserModelManager()
+    # objects = UserModelManager()
 
     def __str__(self):
         return str(self.username)

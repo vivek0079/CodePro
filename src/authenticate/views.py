@@ -1,30 +1,45 @@
 from django.shortcuts import render
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
+import json
 
 from .models import User
 
 def loginUser(request):
     if request.is_ajax():
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            print(username)
+            print(password)
+            # stayloggedin = request.POST.get('stayloggedin')
+            # if stayloggedin == "true":
+            #     pass
+            # else:
+            #     request.session.set_expiry(0)
 
-        stayloggedin = request.POST.get('stayloggedin')
-        if stayloggedin == "true":
-           pass
-        else:
-            request.session.set_expiry(0)
-
-        message = "Invalid Credentials"
-
-        user = User.objects.get(username=username)
-        if user.password == password:
-            request.session['username'] = username
-            message = "Succesfully Logged in !!!"
-        res = {
-            "msg": message,
-            "username": username
-        }
-        return JsonResponse(res, safe=False)
+            message = "Invalid Credentials"
+            temp = User.objects.all()
+            print(temp)
+            # user = User.objects.get(username=username)
+            # print(user.password)
+            # if user.password == password:
+            #     request.session['username'] = username
+            #     message = "Succesfully Logged in !!!"
+            #     print(message)
+            # users = User.objects
+            # print(users)
+            for user in temp:
+                if username == user.username:
+                    message = "Successfully logged in"
+                    request.session['username'] = username
+            res = {
+                "msg": message,
+                "username": username
+            }
+            print(res)
+            return HttpResponse(json.dumps(res), content_type="application/json")
+        except Exception as e:
+            print (e)
     else:
         return HttpResponseBadRequest()
 
@@ -56,8 +71,7 @@ def registerUser(request):
 
 def logoutUser(request):
     if request.is_ajax():
-        user_session = request.session['username']
-        del user_session
+        del request.session['username']
         message = "Succesfully Logged out !!!"
         res = {
             "msg": message
