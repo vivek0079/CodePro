@@ -39,6 +39,23 @@ $(document).ready(function () {
                         });
                     console.log('Logged')
                 }
+                else{
+                    $('#login-username').val('');
+                    $('#login-password').val('');
+                    $.toast({
+                        text: "Invalid credentials",
+                        heading: 'Error',
+                        icon: 'error',
+                        showHideTransition: 'fade',
+                        allowToastClose: true,
+                        hideAfter: 3000,
+                        stack: false,
+                        position: 'top-center',
+                        textAlign: 'center',
+                        loader: true,
+                        loaderBg: '#9EC600',
+                    });
+                }
             },
             error: function (jqXHR, textStatus){
                 console.log(textStatus)
@@ -78,7 +95,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#register').on('click', function(e){
+    $('#register-btn').on('click', function(e){
         var username = $('#register-username').val();
         var email = $('#register-email').val();
         var password = $('#register-pass').val();
@@ -94,15 +111,30 @@ $(document).ready(function () {
             type: 'POST',
             data: form_data,
             dataType: 'json',
-            // timeout: 10000,
+            timeout: 10000,
             success: function(response){
                 console.log(response)
                 if (response.msg == "Username or Email already exists"){
                     $('#register-error').html(response.msg);
                 }
                 else{
-                    alert(response.msg);
-                    location.reload();
+                    $('#register-modal').modal('toggle');
+                    $.toast({
+                        text: "Welcome to CodePro.Good to see you",
+                        heading: 'Successfully registered',
+                        icon: 'success',
+                        showHideTransition: 'fade',
+                        allowToastClose: true,
+                        hideAfter: 2000,
+                        stack: false,
+                        position: 'top-center',
+                        textAlign: 'center',
+                        loader: true,
+                        loaderBg: '#9EC600',
+                        beforeHide: function(){
+                            location.reload();
+                        }
+                    });
                 }
             },
             error: function (jqXHR, textStatus) {
