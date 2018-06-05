@@ -87,6 +87,25 @@ def logoutUser(request):
         return HttpResponseBadRequest()
 
 
+def userExists(request):
+    if request.is_ajax():
+        username = request.GET.get('username')
+        # print(username)
+        flag = 'True'
+        user = User.objects.filter(username__iexact=username)
+        print(user.exists())
+        print(len(username))
+        if(user):
+            flag = 'False'
+        res = {
+            "flag": flag,
+        }
+        print(res)
+        return JsonResponse(res, safe=False)
+    else:
+        return HttpResponseBadRequest()
+
+
 def savetoProfile(request):
     return
 

@@ -21,37 +21,50 @@ $(document).ready(function () {
                 console.log(response.status)
                 if (response.status == 200){
                     $('#login-modal').modal('hide')
-                                        
-                    $.toast({
-                        text: "Successfully logged in", // Text that is to be shown in the toast
-                        heading: 'Success', // Optional heading to be shown on the toast
-                        icon: 'success', // Type of toast icon
-                        showHideTransition: 'fade', // fade, slide or plain
-                        allowToastClose: true, // Boolean value true or false
-                        hideAfter: 2000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
-                        stack: false, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
-                        position: 'top-center', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
-                        textAlign: 'center',  // Text alignment i.e. left, right or center
-                        loader: true,  // Whether to show loader or not. True by default
-                        loaderBg: '#9EC600',  // Background color of the toast loader
-                        afterHidden: function () {
-                            location.reload();
-                        }
-                    });
+                        $.toast({
+                            text: "Successfully logged in",
+                            heading: 'Success',
+                            icon: 'success',
+                            showHideTransition: 'fade',
+                            allowToastClose: true,
+                            hideAfter: 700,
+                            stack: false,
+                            position: 'top-center',
+                            textAlign: 'center',
+                            loader: true,
+                            loaderBg: '#9EC600',
+                            beforeHide: function(){
+                                location.reload();
+                            }
+                        });
                     console.log('Logged')
                 }
-
             },
             error: function (jqXHR, textStatus){
                 console.log(textStatus)
                 console.log(jqXHR.status)
                 if(textStatus == 'error'){
-                    alert('Invalid Credentials');
+                    $('#login-username').val('');
+                    $('#login-password').val('');
+                    $.toast({
+                        text: "Invalid credentials",
+                        heading: 'Error',
+                        icon: 'error',
+                        showHideTransition: 'fade',
+                        allowToastClose: true,
+                        hideAfter: 3000,
+                        stack: false,
+                        position: 'top-center',
+                        textAlign: 'center',
+                        loader: true,
+                        loaderBg: '#9EC600',
+                    });
                 }
             }
         });
         return false;
     });
+
     $('#logout').on('click', function(e){
         $.ajax({
             url: 'user/logout/',
@@ -59,10 +72,12 @@ $(document).ready(function () {
             dataType: 'json',
             timeout: 10000,
             success: function(response){
-                console.log(response)                                 
+                console.log(response)    
+                location.reload();                             
             }
         });
     });
+
     $('#register').on('click', function(e){
         var username = $('#register-username').val();
         var email = $('#register-email').val();
@@ -95,6 +110,107 @@ $(document).ready(function () {
                 console.log(textStatus)
             }
         });
+    });
+
+    // Some utility functions
+
+
+    // $.get('/user/logout/', function (response) {
+    //     $.toast({
+    //         text: "Successfully logged in",
+    //         heading: 'Success',
+    //         icon: 'success',
+    //         showHideTransition: 'fade',
+    //         allowToastClose: true,
+    //         hideAfter: 3000,
+    //         stack: false,
+    //         position: 'top-center',
+    //         textAlign: 'center',
+    //         loader: true,
+    //         loaderBg: '#9EC600',
+    //     });
+    // });
+
+    $("#login-modal").on("hidden.bs.modal", function () {
+        $("#login-username").val('');
+        $('#login-password').val('');
+    });
+
+    $("#register-modal").on("hidden.bs.modal", function () {
+        $("#register-username").val('');
+        $('#register-email').val('');
+        $('#register-pass').val('');
+        $('#register-con-pass').val('');        
+        $('#register-error').val('');        
+    });
+
+    // Validation part
+
+    function validateEmail(sEmail) {
+        var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    $('#register-email').keyup(function(){
+        var email = $(this).val();
+        if(validateEmail(email)){
+            $('#register-error').html('')
+            $('#register-btn').prop('disabled', false)
+        }
+        else{
+            $('#register-error').html('Invalid email address')
+            $('#register-btn').prop('disabled', true)
+        }
+    });
+
+    $('#register-con-pass').keyup(function(){
+        var pass = $('#register-pass').val();
+        var con_pass = $(this).val();
+        if(pass === con_pass){
+            $('#register-error').html('')
+            $('#register-btn').prop('disabled', false)
+        }
+        else{
+            $('#register-error').html('Passwords do not match')
+            $('#register-btn').prop('disabled', true)
+        }
+    });
+
+    $('#register-username').keyup(function(){
+        var username = $(this).val();
+        if(username.length < 5){
+            $('#register-error').html('Invalid length')
+            $('#register-btn').prop('disabled', true)
+        }
+        else{
+            form_data = {
+                username: username,
+            }
+            $.ajax({
+                url: 'user/validate/',
+                type: 'GET',
+                data: form_data,
+                dataType: 'json',
+                timeout: 2000,
+                success: function (res) {
+                    console.log(res)
+                    if (res.flag == 'True') {
+                        $('#register-error').html('')
+                        $('#register-btn').prop('disabled', false)
+                    }
+                    else {
+                        $('#register-error').html('Username already exists')
+                        $('#register-btn').prop('disabled', true)
+                    }
+                }
+            })
+        }
+        
     });
 
 });
