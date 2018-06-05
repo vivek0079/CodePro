@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^login/$', loginUser, name='login'),
     url(r'^register/$', registerUser, name='register'),
     url(r'^logout/$', logoutUser, name='logout'),
+    
     url(r'^validate/$', userExists, name='validate')
 ]

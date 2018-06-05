@@ -1,11 +1,9 @@
 $(document).ready(function () {
+    console.log("Welcome to CodePro | Awesome Code Compiler")
     $('#login').on('click', function (e) { 
-        console.log("jQuery")
         var username = $('#login-username').val();
-        console.log(username)
         var password = $('#login-password').val();
         var stayloggedin = $('#stayloggedin').prop('checked');
-        // console.log(remember)
         var form_data = {
             username: username, 
             password: password,
@@ -18,7 +16,6 @@ $(document).ready(function () {
             dataType: 'json',
             timeout: 10000,
             success: function(response){
-                console.log(response.status)
                 if (response.status == 200){
                     $('#login-modal').modal('hide')
                         $.toast({
@@ -37,7 +34,6 @@ $(document).ready(function () {
                                 location.reload();
                             }
                         });
-                    console.log('Logged')
                 }
                 else{
                     $('#login-username').val('');
@@ -58,8 +54,6 @@ $(document).ready(function () {
                 }
             },
             error: function (jqXHR, textStatus){
-                console.log(textStatus)
-                console.log(jqXHR.status)
                 if(textStatus == 'error'){
                     $('#login-username').val('');
                     $('#login-password').val('');
@@ -79,7 +73,6 @@ $(document).ready(function () {
                 }
             }
         });
-        return false;
     });
 
     $('#logout').on('click', function(e){
@@ -89,8 +82,11 @@ $(document).ready(function () {
             dataType: 'json',
             timeout: 10000,
             success: function(response){
-                console.log(response)    
                 location.reload();                             
+            },
+            error: function (jqXHR, textStatus){
+                console.log(jqXHR)
+                console.log(textStatus)
             }
         });
     });
@@ -113,9 +109,8 @@ $(document).ready(function () {
             dataType: 'json',
             timeout: 10000,
             success: function(response){
-                console.log(response)
-                if (response.msg == "Username or Email already exists"){
-                    $('#register-error').html(response.msg);
+                if (response.status == 404){
+                    $('#register-error').html("Username or Email already exists");
                 }
                 else{
                     $('#register-modal').modal('toggle');
@@ -145,23 +140,6 @@ $(document).ready(function () {
     });
 
     // Some utility functions
-
-
-    // $.get('/user/logout/', function (response) {
-    //     $.toast({
-    //         text: "Successfully logged in",
-    //         heading: 'Success',
-    //         icon: 'success',
-    //         showHideTransition: 'fade',
-    //         allowToastClose: true,
-    //         hideAfter: 3000,
-    //         stack: false,
-    //         position: 'top-center',
-    //         textAlign: 'center',
-    //         loader: true,
-    //         loaderBg: '#9EC600',
-    //     });
-    // });
 
     $("#login-modal").on("hidden.bs.modal", function () {
         $("#login-username").val('');
@@ -230,7 +208,6 @@ $(document).ready(function () {
                 dataType: 'json',
                 timeout: 2000,
                 success: function (res) {
-                    console.log(res)
                     if (res.flag == 'True') {
                         $('#register-error').html('')
                         $('#register-btn').prop('disabled', false)
