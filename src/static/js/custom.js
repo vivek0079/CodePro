@@ -1,5 +1,6 @@
 $(document).ready(function () {
     console.log("Welcome to CodePro | Awesome Code Compiler")
+
     $('#login').on('click', function (e) { 
         var username = $('#login-username').val();
         var password = $('#login-password').val();
@@ -221,5 +222,47 @@ $(document).ready(function () {
         }
         
     });
+
+
+    // Ace-builds code
+
+    var initialLang = "PYTHON"
+    var initialTheme = "DARK"
+    var indent = 4
+
+    var initialSnippet = {}
+    initialSnippet['C'] = "#include <stdio.h>\nint main(void) {\n	// your code goes here\n	return 0;\n}\n";
+    initialSnippet['CPP'] = "#include <iostream>\nusing namespace std;\n\nint main() {\n	// your code goes here\n	return 0;\n}\n";
+    initialSnippet['CSHARP'] = "using System;\n\npublic class Test\n{\n	public static void Main()\n	{\n		// your code goes here\n	}\n}\n";
+    initialSnippet['CSS'] = "/* begin writing below */";
+    initialSnippet['CLOJURE'] = "; your code goes here";
+    initialSnippet['HASKELL'] = "main = -- your code goes here";
+    initialSnippet['JAVA'] = "public class Test {\n    public static void main(String[] args) {\n        // Your code goes here\n    }\n}";
+    initialSnippet['JAVASCRIPT'] = "importPackage(java.io);\nimportPackage(java.lang);\n\n// your code goes here\n";
+    initialSnippet['OBJECTIVEC'] = "#import <objc/objc.h>\n#import <objc/Object.h>\n#import <Foundation/Foundation.h>\n\n@implementation TestObj\nint main()\n{\n	// your code goes here\n	return 0;\n}\n@end";
+    initialSnippet['PERL'] = "#!/usr/bin/perl\n# your code goes here\n";
+    initialSnippet['PHP'] = "<?php\n\n// your code goes here\n";
+    initialSnippet['PYTHON'] = "def main():\n    # Your code goes here\n\nif __name__ == \"__main__\":\n    main()";
+    initialSnippet['R'] = "# your code goes here";
+    initialSnippet['RUBY'] = "# your code goes here";
+    initialSnippet['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
+    initialSnippet['SCALA'] = "object Main extends App {\n	// your code goes here\n}\n";
+
+    ace.config.set("basePath", "/static/ace-builds/src/");
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/python");
+    editor.setTheme("ace/theme/light");
+    editor.getSession().setTabSize(indent);
+    editorContent = editor.getValue();
+    editor.setFontSize(15);
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true,
+    });
+    editor.setValue(initialSnippet[initialLang], -1)
+    var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
+    var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"))
 
 });

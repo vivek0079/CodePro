@@ -1,0 +1,72 @@
+<div class="container">
+    <div class="row">
+        <h3>Welcome {{ request.session.username }}</h3>                
+        <hr>
+        <div class="col-sm-8 col-md-8" >            
+            <div style="width: 100%;height: 500px;background-color:#f8f8f8;">
+                <div id="editor-topbar" >
+                    <div class="lang-choose" style="float: left;padding:5px 5px 5px;">
+                        <select class="form-control" name="lang" id="form-lang" style="height:30px;width:220px;font-size:12px;font-family: 'Open Sans', sans-serif">
+                            <option value="C">C (gcc 4.8.1)</option>
+                            <option value="CPP">C++ (g++ 4.8.1)</option>
+                            <option value="CSHARP">C#</option>
+                            <option value="CLOJURE">Clojure (clojure 1.1.0)</option>
+                            <option value="CSS">CSS</option>
+                            <option value="HASKELL">Haskell (ghc 7.4.1)</option>
+                            <option value="JAVA">Java (openjdk 1.7.0_09)</option>
+                            <option value="JAVASCRIPT">JavaScript</option>
+                            <option value="OBJECTIVEC">Objective-C (clang 3.3)</option>
+                            <option value="PERL">Perl (perl 5.14.2)</option>
+                            <option value="PHP">PHP (php 5.3.10)</option>
+                            <option value="PYTHON" selected>Python (python 2.7.3)</option>
+                            <option value="R">R (RScript 2.14.1)</option>
+                            <option value="RUBY">Ruby (ruby 2.1.1)</option>
+                            <option value="RUST">Rust (rustc 1.4.0)</option>
+                            <option value="SCALA">Scala (scalac 2.9.1)</option>
+                        </select>
+                    </div>
+                    <div style="float: right;">
+                        <i class="fa fa-expand-arrows-alt"></i>
+                    </div>
+                </div>
+                <pre id="editor"></pre>
+                
+                <div class="test-input-check">
+                    <input name="test-input-checkbox" id="test-input-checkbox" style="cursor: pointer;" type="checkbox">
+                    <span class="test-input-text" style="cursor: pointer;">Click here for custom input</span>
+                    <div class="test-input-container hidden" style="display: none;">
+                        <textarea id="test-input" class="nice-textarea" placeholder="Write your inputs to program.."></textarea>
+                    </div>
+                    <hr class="hr">
+                </div>
+                                    
+                <div style="float: left">
+                    <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>                    
+                    <button type="button" class="btn btn-info" style="margin-right: 10px;background:#33adff" data-toggle="tooltip" title="Click to compile code">Compile</button>                    
+                    <button type="button" class="btn btn-success" style="margin-right: 10px;background: #6bbd00;" data-toggle="tooltip" title="Click to run code">Run</button>
+                </div>
+                
+            </div>
+        </div>
+              
+        <div class="col-sm-4 col-md-4">    
+            <div class="panel" style="background-color:transparent;box-shadow: none">                  
+                  <div class="panel-body">
+                        <div style="float:left">
+                            <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>  
+                            <br><br>
+                            <p>Show profile here</p>
+                        </div>                         
+                  </div>
+            </div>            
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="container">                        
+            <div class="footer">
+                <h3>This is the footer.Footer coming soon !!!</h3>
+            </div>
+        </div>
+    </div>
+</div>
