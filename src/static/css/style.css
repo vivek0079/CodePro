@@ -46,3 +46,8 @@ pre {
     right: 0;
     border-left: 1px solid;
 }
+
+.nice-textarea{
+    width: 100%;
+    padding: 5px 2px 2px 2px;
+}

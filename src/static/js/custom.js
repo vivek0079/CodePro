@@ -1,5 +1,6 @@
 $(document).ready(function () {
     console.log("Welcome to CodePro | Awesome Code Compiler")
+    
 
     $('#login').on('click', function (e) { 
         var username = $('#login-username').val();
@@ -252,17 +253,40 @@ $(document).ready(function () {
     ace.require("ace/ext/language_tools");
     var editor = ace.edit("editor");
     editor.session.setMode("ace/mode/python");
-    editor.setTheme("ace/theme/light");
+    editor.setTheme("ace/theme/chrome");
     editor.getSession().setTabSize(indent);
     editorContent = editor.getValue();
     editor.setFontSize(15);
+
+
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: true,
+        highlightActiveLine: true, 
+        highlightSelectedWord: true, // boolean:
+        autoScrollEditorIntoView: undefined,
+        animatedScroll: true,
+        scrollPastEnd: 5,
+        scrollSpeed: 5,
+        tooltipFollowsMouse: true,
     });
+
+    
     editor.setValue(initialSnippet[initialLang], -1)
-    var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
-    var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"))
+    // var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
+    // var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"))
+    $('#input-checkbox').prop('checked', false);
+    $('#input-checkbox').click(function () {
+        if ($('#input-checkbox').is(":checked")) {
+            $(".input-container").slideDown();
+        }
+        else {
+            $(".input-container").slideUp();
+        }
+    });
+
+    
+
 
 });

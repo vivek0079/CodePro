@@ -30,40 +30,41 @@
                     </div>
                 </div>
                 <pre id="editor"></pre>
-                
                 <div class="test-input-check">
-                    <input name="test-input-checkbox" id="test-input-checkbox" style="cursor: pointer;" type="checkbox">
-                    <span class="test-input-text" style="cursor: pointer;">Click here for custom input</span>
-                    <div class="test-input-container hidden" style="display: none;">
-                        <textarea id="test-input" class="nice-textarea" placeholder="Write your inputs to program.."></textarea>
-                    </div>
-                    <hr class="hr">
+                
+                <input id="input-checkbox" style="cursor: pointer;" type="checkbox" checked="false">
+                <span style="cursor: pointer;">Click here for custom input</span>
+                <div class="input-container" style="display: none;padding:12px 2px 2px 2px;" >
+                    <textarea id="test-input" class="nice-textarea" placeholder="Write your custom inputs here..." style="height:150px"></textarea>
+                </div>
+                <hr class="hr">
                 </div>
                                     
-                <div style="float: left">
-                    <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>                    
+                <div style="float: left">                    
+                    {% if request.session.username %}
+                    <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>                        
+                    {% endif %}                        
                     <button type="button" class="btn btn-info" style="margin-right: 10px;background:#33adff" data-toggle="tooltip" title="Click to compile code">Compile</button>                    
                     <button type="button" class="btn btn-success" style="margin-right: 10px;background: #6bbd00;" data-toggle="tooltip" title="Click to run code">Run</button>
                 </div>
                 
             </div>
         </div>
-              
-        <div class="col-sm-4 col-md-4">    
-            <div class="panel" style="background-color:transparent;box-shadow: none">                  
-                  <div class="panel-body">
-                        <div style="float:left">
-                            <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>  
-                            <br><br>
-                            <p>Show profile here</p>
-                        </div>                         
-                  </div>
-            </div>            
+        <div class="col-sm-4 col-md-4">
+            <div class="panel" style="background-color:transparent;box-shadow: none">
+                <div class="panel-body">
+                    <div style="float:left">
+                        <p>Show profile here</p>
+                        <p>Share options</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        
+                             
     </div>
     <div class="row">
-        <div class="container">                        
+        <div class="container">    
+            <hr>                    
             <div class="footer">
                 <h3>This is the footer.Footer coming soon !!!</h3>
             </div>
