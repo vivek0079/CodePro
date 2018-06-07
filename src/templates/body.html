@@ -3,10 +3,10 @@
         <h3>Welcome {{ request.session.username }}</h3>                
         <hr>
         <div class="col-sm-8 col-md-8" >            
-            <div style="width: 100%;height: 500px;background-color:#f8f8f8;">
+            <div class="left-container">
                 <div id="editor-topbar" >
-                    <div class="lang-choose" style="float: left;padding:5px 5px 5px;">
-                        <select class="form-control" name="lang" id="form-lang" style="height:30px;width:220px;font-size:12px;font-family: 'Open Sans', sans-serif">
+                    <div class="lang-choose">
+                        <select class="form-control" name="lang" id="form-lang">
                             <option value="C">C (gcc 4.8.1)</option>
                             <option value="CPP">C++ (g++ 4.8.1)</option>
                             <option value="CSHARP">C#</option>
@@ -25,9 +25,9 @@
                             <option value="SCALA">Scala (scalac 2.9.1)</option>
                         </select>
                     </div>
-                    <div style="float: right;">
+                    <!-- <div style="float: right;">
                         <i class="fa fa-expand-arrows-alt"></i>
-                    </div>
+                    </div> -->
                 </div>
                 <pre id="editor"></pre>
                 <div class="test-input-check">
@@ -35,23 +35,23 @@
                 <input id="input-checkbox" style="cursor: pointer;" type="checkbox" checked="false">
                 <span style="cursor: pointer;">Click here for custom input</span>
                 <div class="input-container" style="display: none;padding:12px 2px 2px 2px;" >
-                    <textarea id="test-input" class="nice-textarea" placeholder="Write your custom inputs here..." style="height:150px"></textarea>
+                    <textarea id="test-input" class="nice-textarea" placeholder="Write your custom inputs here..."></textarea>
                 </div>
                 <hr class="hr">
                 </div>
                                     
-                <div style="float: left">                    
+                <div class="buttons">                    
                     {% if request.session.username %}
                     <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>                        
                     {% endif %}                        
-                    <button type="button" class="btn btn-info" style="margin-right: 10px;background:#33adff" data-toggle="tooltip" title="Click to compile code">Compile</button>                    
-                    <button type="button" class="btn btn-success" style="margin-right: 10px;background: #6bbd00;" data-toggle="tooltip" title="Click to run code">Run</button>
+                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Click to compile code">Compile</button>                    
+                    <button type="button" class="btn btn-success" data-toggle="tooltip" title="Click to run code">Run</button>
                 </div>
                 
             </div>
         </div>
         <div class="col-sm-4 col-md-4">
-            <div class="panel" style="background-color:transparent;box-shadow: none">
+            <div class="panel-custom">
                 <div class="panel-body">
                     <div style="float:left">
                         <p>Show profile here</p>

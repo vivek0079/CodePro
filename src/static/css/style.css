@@ -49,5 +49,43 @@ pre {
 
 .nice-textarea{
     width: 100%;
+    height:150px;
     padding: 5px 2px 2px 2px;
+}
+
+.left-container{
+    width: 100%;
+    height: 500px;
+    background-color:#f8f8f8;
+}
+
+.lang-choose{
+    float: left;
+    padding:5px 5px 5px;
+}
+
+.form-control{
+    height:30px;
+    width:220px;
+    font-size:12px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.buttons{
+    float: left;
+}
+
+.btn-info{
+    margin-right: 10px;
+    background:#33adff;
+}
+
+.btn-success{
+    margin-right: 10px;
+    background: #6bbd00;
+}
+
+.panel-custom{
+    background-color:transparent;
+    box-shadow: none
 }

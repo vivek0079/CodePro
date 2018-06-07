@@ -36,6 +36,7 @@ def compileCode(request):
         res = requests.post(COMPILE_URL, data=data)
         return JsonResponse(res.json(), safe=True)        
     return HttpResponseBadRequest()
+    
 
 def runCode(request):
     if request.is_ajax():
@@ -153,3 +154,21 @@ def viewSavedCode(request, code_id=None):
 # print(data)
 # print(CLIENT_SECRET)
 # return render(request, 'index.html', {})
+
+# RUN_URL = u'http://api.hackerearth.com/code/run/'
+# CLIENT_SECRET = '4863283d6c174b0d90d29b47f38122f637e10e47'
+
+# source = "import sys;print(sys.path)"
+
+# data = {
+#     'client_secret': CLIENT_SECRET,
+#     'async': 1,
+#     'source': source,
+#     'lang': "PYTHON",
+#     'time_limit': 5,
+#     'memory_limit': 262144,
+# }
+
+# r = requests.post(RUN_URL, data=data)
+# print (r)
+# return HttpResponse()

@@ -65,6 +65,51 @@ def logoutUser(request):
         return HttpResponseBadRequest()
 
 
+def savetoProfile(request):
+    return
+
+def removefromProfile(request):
+    if request.is_ajax():
+        username = request.POST.get('username')
+        user_qs = User.objects.filter(username__iexact=username)    
+        if user_qs.exists():    
+            user_obj = user_qs.first()
+            id_list = user_obj.code_ids     
+            title_list = user_obj.code_title       
+            for i in range(len(id_list)):
+                if id_list[i] == str(request.POST.get('id')):
+                    id_list.pop(i)
+                    title_list.pop(i)
+                    break
+            user_obj.save()
+        r = {}
+        return JsonResponse(res, safe=False)
+    else:
+        return HttpResponseBadRequest()
+                    
+                
+
+def viewProfile(request):
+    if request.is_ajax():
+        username = request.POST.get('username')
+        user_qs = User.objects.filter(username__iexact=username)
+        if(user_qs.exists()):
+            obj = user_qs.first()
+            code_id_list = obj.code_ids
+            code_title_list = obj.code_title
+            res = {
+                "id_list": code_id_list,
+                "title_list": code_title_list,                
+            }
+        else:
+            res = {
+                "id_list": [],
+                "title_list": [],  
+            }
+        return JsonResponse(res, safe=False)
+    return HttpResponseBadRequest()
+
+# Utility func.
 def userExists(request):
     if request.is_ajax():
         username = request.GET.get('username')
@@ -78,13 +123,3 @@ def userExists(request):
         return JsonResponse(res, safe=False)
     else:
         return HttpResponseBadRequest()
-
-
-def savetoProfile(request):
-    return
-
-def removefromProfile(request):
-    return
-
-def viewProfile(request):
-    return
