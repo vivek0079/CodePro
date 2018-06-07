@@ -1,10 +1,9 @@
 <div class="container">
+    <h3>Welcome {{ request.session.username }}</h3><hr>
     <div class="row">
-        <h3>Welcome {{ request.session.username }}</h3>                
-        <hr>
         <div class="col-sm-8 col-md-8" >            
             <div class="left-container">
-                <div id="editor-topbar" >
+                <div id="editor-topbar">
                     <div class="lang-choose">
                         <select class="form-control" name="lang" id="form-lang">
                             <option value="C">C (gcc 4.8.1)</option>
@@ -26,6 +25,7 @@
                         </select>
                     </div>
                     <!-- <div style="float: right;">
+                        <h4>Temporary</h4>
                         <i class="fa fa-expand-arrows-alt"></i>
                     </div> -->
                 </div>
@@ -44,23 +44,118 @@
                     {% if request.session.username %}
                     <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>                        
                     {% endif %}                        
-                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Click to compile code">Compile</button>                    
-                    <button type="button" class="btn btn-success" data-toggle="tooltip" title="Click to run code">Run</button>
+                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Click to compile code" id="compile-btn">Compile</button>                    
+                    <button type="button" class="btn btn-success" data-toggle="tooltip" title="Click to run code" id="run-btn">Run</button>
                 </div>
                 
-            </div>
+            </div>            
         </div>
-        <div class="col-sm-4 col-md-4">
-            <div class="panel-custom">
+        <div class="col-sm-4 col-md-4">            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Settings <i class="fa fa-cog fa-1x"></i></h3>
+                </div>
                 <div class="panel-body">
-                    <div style="float:left">
-                        <p>Show profile here</p>
-                        <p>Share options</p>
+                    <p>Theme:</p>
+                    <select class="form-control" name="theme" id="editor-theme">
+                        <option value="ambiance">ambiance</option>
+                        <option value="chrome" selected>chrome</option>
+                        <option value="clouds">clouds</option>
+                        <option value="clouds_midnight">clouds_midnight</option>
+                        <option value="cobalt">cobalt</option>
+                        <option value="crimson_editor">crimson_editor</option>
+                        <option value="dracula">dracula</option>
+                        <option value="gruvbox">gruvbox</option>
+                        <option value="idle_fingers">idle_fingers</option>
+                        <option value="iplastic">iplastic</option>
+                        <option value="katzenmilch">katzenmilch</option>
+                        <option value="kuroir">kuroir</option>
+                        <option value="merbivore_soft">merbivore_soft</option>
+                        <option value="mono_industrial">mono_industrial</option>
+                        <option value="monokai">monokai</option>
+                        <option value="pastel_on_dark">pastel_on_dark</option>
+                        <option value="solarized_dark">solarized_dark</option>
+                        <option value="solarized_light">solarized_light</option>
+                        <option value="sqlserver">sqlserver</option>
+                        <option value="terminal">terminal</option>
+                        <option value="textmate">textmate</option>
+                        <option value="tomorrow">tomorrow</option>
+                        <option value="tomorrow_night">tomorrow_night</option>
+                        <option value="tomorrow_night_blue">tomorrow_night_blue</option>
+                        <option value="tomorrow_night_bright">tomorrow_night_bright</option>
+                        <option value="tomorrow_night_eighties">tomorrow_night_eighties</option>
+                        <option value="twilight">twilight</option>
+                        <option value="vibrant_ink">vibrant_ink</option>
+                        <option value="xcode">xcode</option>
+                    </select>
+                    <br>
+                    <p>Indentation:</p>
+                    <select class="form-control" name="indent" id="editor-indent">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4" selected>4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                    </select><br>
+                    <i class="fa fa-download fa-3x" id="download" data-toggle="tooltip" title="Download Code"></i>                    
+                    {% if request.session.username %}
+                    <i class="fa fa-save fa-3x" id="save" data-toggle="tooltip" title="Save Code"></i>                        
+                    <i class="fa fa-user-circle-o fa-3x" id="profile" title="View Profile"  data-toggle="modal" data-target='#profile-modal'></i>                    
+                    {% endif %}      
+                </div>
+            </div>            
+        </div>                             
+    </div>
+    <div class="row">
+        <div class="container" >
+            <div class="col-sm-8 output">
+                <div class="output-box">
+                    <br>
+                    <div class="output-status" style="margin-top:5px">
+                        <div class="status-info run-status">
+                            <div class="key">Run Status:</div>
+                            <div class="value text-center"></div>
+                        </div>
+                        <div class="status-info compile-status">
+                            <div class="key">Compile Status:</div>
+                            <div class="value text-center"></div>
+                        </div>
+                        <div class="status-info time-sec">
+                            <div class="key">Time (sec):</div>
+                            <div class="value text-center"></div>
+                        </div>
+                        <div class="status-info memory-kb">
+                            <div class="key">Memory (KB):</div>
+                            <div class="value text-center"></div>
+                        </div>
                     </div>
+                    <div class="output-details">
+                        <div class="output-error">
+                            <div class="detail-key">Error info</div>
+                            <div class="error-key"></div>
+                            <pre class="error-message"></pre>
+                        </div>
+                        <div class="i-info">
+                            <div class="detail-key">Input (stdin)</div>
+                            <pre class="output-i"> </pre>
+                            <span class="output-i-message">
+                                <i>Standard input is empty</i>
+                            </span>
+                        </div>
+                        <div class="o-info">
+                            <div class="detail-key">Output (stdout)</div>
+                            <pre class="output-o"> </pre>
+                            <span class="output-o-message">
+                                <i>Standard output is empty</i>
+                            </span>
+                        </div>
+                    </div><br>
                 </div>
             </div>
         </div>
-                             
     </div>
     <div class="row">
         <div class="container">    
