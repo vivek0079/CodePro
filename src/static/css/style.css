@@ -4,6 +4,7 @@
 body{
     font-family: 'Open Sans', sans-serif;
 }
+
 #editor { 
     position: relative;
     top: 0;
@@ -42,6 +43,7 @@ pre {
     background-color: rgb(245, 245, 245);
     color: gray;
 }
+
 .ace_status-indicator {
     color: gray;
     position: absolute;
@@ -87,6 +89,14 @@ pre {
     background: #6bbd00;
 }
 
+.btn-default{
+    width: 49%;
+}
+
+.btn-primary{
+    width: 49%;
+}
+
 .panel-custom{
     background-color:transparent;
     box-shadow: none
@@ -130,4 +140,8 @@ pre {
 	color: #888;
 	font-size: 16px;
 	display: none;
+}
+
+.bootbox-input-textarea{
+    width: 100%;
 }

@@ -291,22 +291,29 @@ $(document).ready(function () {
         if (editorContent != "") {
             $("#compile-btn").prop('disabled', false);
             $('#compile-btn').prop('title', "Click to compile code");
+
             $("#run-btn").prop('disabled', false);
             $('#run-btn').prop('title', "Click to run code");
-            $("#save-btn").css({ 'opacity': 1, 'cursor': 'pointer' }); 
+
+            $("#save-btn").css({ 'opacity': 1, 'pointer-events': 'auto', 'cursor': 'pointer' }); 
             $("#save-btn").prop('title', 'Save Code to profile');
-            $("#download-btn").css({ 'opacity': 1, 'cursor': 'pointer' });
+
+            $("#download-btn").css({ 'opacity': 1, 'pointer-events': 'auto', 'cursor': 'pointer' });
             $("#download-btn").prop('title', 'Download Code');
+                        
         }
         else {
             $("#compile-btn").prop('disabled', true);
             $('#compile-btn').prop('title', "No Code to run");
+
             $("#run-btn").prop('disabled', true);
             $('#run-btn').prop('title', "No Code to compile");
-            $("#save-btn").css({'opacity': 0.6, 'cursor': 'not-allowed'});        
+
+            $("#save-btn").css({'opacity': 0.6, 'pointer-events': 'none', 'cursor': 'not-allowed'});        
             $("#save-btn").prop('title', 'No Code to Save');
-            $("#download-btn").css({ 'opacity': 0.6, 'cursor': 'not-allowed' });
-            $("#download-btn").prop('title', 'No Code to download');            
+            
+            $("#download-btn").css({ 'opacity': 0.6, 'pointer-events': 'none', 'cursor': 'not-allowed', });
+            $("#download-btn").prop('title', 'No Code to download');  
 
         }
 
@@ -334,14 +341,11 @@ $(document).ready(function () {
     });
 
     $('#editor-theme').change(function () {
-        console.log('Changed')
         theme = $('#editor-theme').val();
-        console.log(theme)
         editor.setTheme("ace/theme/" + theme);
     });
 
     $('#editor-indent').change(function () {
-        console.log('Changed')
         value = $('#editor-indent').val();
         editor.getSession().setTabSize(value);
     });
@@ -363,13 +367,52 @@ $(document).ready(function () {
     });
 
     $('#download-btn').click(function(){
-
+        getCurrentContent();
+        var content = editorContent;
+        var lang = $('#form-lang').val();
+        var extension = getLangExtension(lang);
+        var fileName
+        bootbox.prompt({
+            title: "Enter desired filename",
+            inputType: 'textarea',
+            callback: function (fileName) {
+                if (fileName != null){
+                    if (fileName == "") {
+                        fileName = "test"
+                    }
+                    fileName = fileName + "." + extension
+                    downloadCode(fileName, content);
+                }
+            }
+        });
     });
 
     // Utility functions
 
     function getCurrentContent(){
         editorContent = editor.getValue();
+    }
+
+    function getLangExtension(lang){
+        return {
+            "C": "c",
+            "CPP": "cpp",
+            "CSHARP": "cs",
+            "CLOJURE": "clj",
+            "CSS": "css",
+            "HASKELL": "hs",
+            "JAVA": "java",
+            "JAVASCRIPT": "js",
+            "OBJECTIVEC": "m",
+            "PERL": "pl",
+            "PHP": "php",
+            "PYTHON": "py",
+            "R": "r",
+            "RUBY": "rb",
+            "RUST": "rs",
+            "SCALA": "scala"
+        }[lang] || "txt";
+        
     }
 
     function runCode(){
@@ -380,8 +423,11 @@ $(document).ready(function () {
 
     }
 
-    function downloadCode(){
-        
+    function downloadCode(filename, content){
+        var zip = new JSZip();
+        zip.file(filename, content);
+        var zipContent = zip.generate({type:"blob"})
+        saveAs(zipContent, "CodePro.zip");
     }
 
 });
