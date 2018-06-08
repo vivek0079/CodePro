@@ -41,9 +41,9 @@
                 </div>
                                     
                 <div class="buttons">                    
-                    {% if request.session.username %}
+                    <!-- {% if request.session.username %}
                     <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>                        
-                    {% endif %}                        
+                    {% endif %}                         -->
                     <button type="button" class="btn btn-info" data-toggle="tooltip" title="Click to compile code" id="compile-btn">Compile</button>                    
                     <button type="button" class="btn btn-success" data-toggle="tooltip" title="Click to run code" id="run-btn">Run</button>
                 </div>
@@ -53,40 +53,40 @@
         <div class="col-sm-4 col-md-4">            
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Settings <i class="fa fa-cog fa-1x"></i></h3>
+                    <h3 class="panel-title"><i class="fa fa-gear fa-spin fa-1x" style="font-size:24px"></i>  Settings</h3>
                 </div>
                 <div class="panel-body">
                     <p>Theme:</p>
                     <select class="form-control" name="theme" id="editor-theme">
-                        <option value="ambiance">ambiance</option>
-                        <option value="chrome" selected>chrome</option>
-                        <option value="clouds">clouds</option>
-                        <option value="clouds_midnight">clouds_midnight</option>
-                        <option value="cobalt">cobalt</option>
-                        <option value="crimson_editor">crimson_editor</option>
-                        <option value="dracula">dracula</option>
-                        <option value="gruvbox">gruvbox</option>
-                        <option value="idle_fingers">idle_fingers</option>
-                        <option value="iplastic">iplastic</option>
-                        <option value="katzenmilch">katzenmilch</option>
-                        <option value="kuroir">kuroir</option>
-                        <option value="merbivore_soft">merbivore_soft</option>
-                        <option value="mono_industrial">mono_industrial</option>
-                        <option value="monokai">monokai</option>
-                        <option value="pastel_on_dark">pastel_on_dark</option>
-                        <option value="solarized_dark">solarized_dark</option>
-                        <option value="solarized_light">solarized_light</option>
-                        <option value="sqlserver">sqlserver</option>
-                        <option value="terminal">terminal</option>
-                        <option value="textmate">textmate</option>
-                        <option value="tomorrow">tomorrow</option>
-                        <option value="tomorrow_night">tomorrow_night</option>
-                        <option value="tomorrow_night_blue">tomorrow_night_blue</option>
-                        <option value="tomorrow_night_bright">tomorrow_night_bright</option>
-                        <option value="tomorrow_night_eighties">tomorrow_night_eighties</option>
-                        <option value="twilight">twilight</option>
-                        <option value="vibrant_ink">vibrant_ink</option>
-                        <option value="xcode">xcode</option>
+                        <option value="ambiance">Ambiance</option>
+                        <option value="chrome" selected>Chrome</option>
+                        <option value="clouds">Clouds</option>
+                        <option value="clouds_midnight">Clouds Midnight</option>
+                        <option value="cobalt">Cobalt</option>
+                        <option value="crimson_editor">Crimson Editor</option>
+                        <option value="dracula">Dracula</option>
+                        <option value="gruvbox">Gruvbox</option>
+                        <option value="idle_fingers">Idle Fingers</option>
+                        <option value="iplastic">Iplastic</option>
+                        <option value="katzenmilch">Katzenmilch</option>
+                        <option value="kuroir">Kuroir</option>
+                        <option value="merbivore_soft">Merbivore Soft</option>
+                        <option value="mono_industrial">Mono Industrial</option>
+                        <option value="monokai">Monokai</option>
+                        <option value="pastel_on_dark">Pastel on Dark</option>
+                        <option value="solarized_dark">Solarized Dark</option>
+                        <option value="solarized_light">Solarized Light</option>
+                        <option value="sqlserver">Sqlserver</option>
+                        <option value="terminal">Terminal</option>
+                        <option value="textmate">Textmate</option>
+                        <option value="tomorrow">Tomorrow</option>
+                        <option value="tomorrow_night">Tomorrow Night</option>
+                        <option value="tomorrow_night_blue">Tomorrow Night Blue</option>
+                        <option value="tomorrow_night_bright">Tomorrow Night Bright</option>
+                        <option value="tomorrow_night_eighties">Tomorrow Night Eighties</option>
+                        <option value="twilight">Twilight</option>
+                        <option value="vibrant_ink">Vibrant Ink</option>
+                        <option value="xcode">Xcode</option>
                     </select>
                     <br>
                     <p>Indentation:</p>
@@ -100,10 +100,10 @@
                         <option value="7">7</option>
                         <option value="8">8</option>
                     </select><br>
-                    <i class="fa fa-download fa-3x" id="download" data-toggle="tooltip" title="Download Code"></i>                    
+                    <i class="fa fa-custom fa-download fa-3x" id="download-btn" data-toggle="tooltip" title="Download Code"></i>                    
                     {% if request.session.username %}
-                    <i class="fa fa-save fa-3x" id="save" data-toggle="tooltip" title="Save Code"></i>                        
-                    <i class="fa fa-user-circle-o fa-3x" id="profile" title="View Profile"  data-toggle="modal" data-target='#profile-modal'></i>                    
+                    <i class="fa fa-custom fa-save fa-3x" id="save-btn" data-toggle="tooltip" title="Save Code to profile" style=""></i>                        
+                    <i class="fa fa-custom fa-user-circle-o fa-3x" id="profile-btn" title="View Profile"  data-toggle="modal" data-target='#profile-modal'></i>                    
                     {% endif %}      
                 </div>
             </div>            
@@ -157,12 +157,5 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="container">    
-            <hr>                    
-            <div class="footer">
-                <h3>This is the footer.Footer coming soon !!!</h3>
-            </div>
-        </div>
-    </div>
+    {% include "footer.html" %}
 </div>

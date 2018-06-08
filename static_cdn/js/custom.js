@@ -242,7 +242,7 @@ $(document).ready(function () {
     initialSnippet['JAVASCRIPT'] = "importPackage(java.io);\nimportPackage(java.lang);\n\n// your code goes here\n";
     initialSnippet['OBJECTIVEC'] = "#import <objc/objc.h>\n#import <objc/Object.h>\n#import <Foundation/Foundation.h>\n\n@implementation TestObj\nint main()\n{\n	// your code goes here\n	return 0;\n}\n@end";
     initialSnippet['PERL'] = "#!/usr/bin/perl\n# your code goes here\n";
-    initialSnippet['PHP'] = "<?php\n\n// your code goes here\n";
+    initialSnippet['PHP'] = "<?php\n\n// your code goes here\n?>";
     initialSnippet['PYTHON'] = "def main():\n    # Your code goes here\n\nif __name__ == \"__main__\":\n    main()";
     initialSnippet['R'] = "# your code goes here";
     initialSnippet['RUBY'] = "# your code goes here";
@@ -252,6 +252,9 @@ $(document).ready(function () {
     ace.config.set("basePath", "/static/ace-builds/src/");
     ace.require("ace/ext/language_tools");
     var editor = ace.edit("editor");
+    var editorContent;
+
+
     editor.session.setMode("ace/mode/python");
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setTabSize(indent);
@@ -274,8 +277,14 @@ $(document).ready(function () {
 
     
     editor.setValue(initialSnippet[initialLang], -1)
+
+    $('#editor-theme').val('chrome');
+    $('#editor-indent').val('4');
+    
     // var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
     // var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"))
+
+    // Events 
     $('#input-checkbox').prop('checked', false);
     $('#input-checkbox').click(function () {
         if ($('#input-checkbox').is(":checked")) {
@@ -286,7 +295,60 @@ $(document).ready(function () {
         }
     });
 
-    
+    $('#form-lang').change(function () {
+        lang = $('#form-lang').val()
+        if ((lang == "C") || (lang == "CPP")) {
+            editor.getSession().setMode("ace/mode/c_cpp")
+        }
+        else {
+            editor.getSession().setMode("ace/mode/" + lang.toLowerCase());
+        }
+        editor.setValue(initialSnippet[lang]);
+    });
 
+    $('#editor-theme').change(function(){
+        console.log('Changed')
+        theme = $('#editor-theme').val();
+        console.log(theme)
+        editor.setTheme("ace/theme/"+theme);
+    })
+
+    $('#editor-indent').change(function(){
+        console.log('Changed')        
+        value = $('#editor-indent').val();
+        editor.getSession().setTabSize(value);
+    })
+
+    editor.getSession().on('change', function (e) {
+        getCurrentContent();
+        if (editorContent != "") {
+            $("#compile-btn").prop('disabled', false);
+            $('#compile-btn').prop('title', "Click to compile code");
+            $("#run-btn").prop('disabled', false);
+            $('#run-btn').prop('title', "Click to run code");
+        }
+        else {
+            $("#compile-btn").prop('disabled', true);
+            $('#compile-btn').prop('title', "No Code to run");
+            $("#run-btn").prop('disabled', true);
+            $('#run-btn').prop('title', "No Code to compile");
+        }
+
+    });
+
+
+    // Utility functions
+
+    function getCurrentContent(){
+        editorContent = editor.getValue();
+    }
+
+    function runCode(){
+
+    }
+
+    function compileCode(){
+
+    }
 
 });

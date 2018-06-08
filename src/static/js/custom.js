@@ -270,7 +270,7 @@ $(document).ready(function () {
         highlightSelectedWord: true, // boolean:
         autoScrollEditorIntoView: undefined,
         animatedScroll: true,
-        scrollPastEnd: 5,
+        scrollPastEnd: 1,
         scrollSpeed: 5,
         tooltipFollowsMouse: true,
     });
@@ -285,6 +285,33 @@ $(document).ready(function () {
     // var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"))
 
     // Events 
+    
+    editor.getSession().on('change', function (e) {
+        getCurrentContent();
+        if (editorContent != "") {
+            $("#compile-btn").prop('disabled', false);
+            $('#compile-btn').prop('title', "Click to compile code");
+            $("#run-btn").prop('disabled', false);
+            $('#run-btn').prop('title', "Click to run code");
+            $("#save-btn").css({ 'opacity': 1, 'cursor': 'pointer' }); 
+            $("#save-btn").prop('title', 'Save Code to profile');
+            $("#download-btn").css({ 'opacity': 1, 'cursor': 'pointer' });
+            $("#download-btn").prop('title', 'Download Code');
+        }
+        else {
+            $("#compile-btn").prop('disabled', true);
+            $('#compile-btn').prop('title', "No Code to run");
+            $("#run-btn").prop('disabled', true);
+            $('#run-btn').prop('title', "No Code to compile");
+            $("#save-btn").css({'opacity': 0.6, 'cursor': 'not-allowed'});        
+            $("#save-btn").prop('title', 'No Code to Save');
+            $("#download-btn").css({ 'opacity': 0.6, 'cursor': 'not-allowed' });
+            $("#download-btn").prop('title', 'No Code to download');            
+
+        }
+
+    });
+
     $('#input-checkbox').prop('checked', false);
     $('#input-checkbox').click(function () {
         if ($('#input-checkbox').is(":checked")) {
@@ -306,36 +333,38 @@ $(document).ready(function () {
         editor.setValue(initialSnippet[lang]);
     });
 
-    $('#editor-theme').change(function(){
+    $('#editor-theme').change(function () {
         console.log('Changed')
         theme = $('#editor-theme').val();
         console.log(theme)
-        editor.setTheme("ace/theme/"+theme);
-    })
+        editor.setTheme("ace/theme/" + theme);
+    });
 
-    $('#editor-indent').change(function(){
-        console.log('Changed')        
+    $('#editor-indent').change(function () {
+        console.log('Changed')
         value = $('#editor-indent').val();
         editor.getSession().setTabSize(value);
-    })
+    });
 
-    editor.getSession().on('change', function (e) {
-        getCurrentContent();
-        if (editorContent != "") {
-            $("#compile-btn").prop('disabled', false);
-            $('#compile-btn').prop('title', "Click to compile code");
-            $("#run-btn").prop('disabled', false);
-            $('#run-btn').prop('title', "Click to run code");
-        }
-        else {
-            $("#compile-btn").prop('disabled', true);
-            $('#compile-btn').prop('title', "No Code to run");
-            $("#run-btn").prop('disabled', true);
-            $('#run-btn').prop('title', "No Code to compile");
-        }
+    $('#run-btn').click(function () {
+        runCode();
+    });
+
+    $('#compile-btn').click(function () {
+        compileCode();
+    });
+
+    $('#save-btn').click(function(){
 
     });
 
+    $('#profile-btn').click(function(){
+
+    });
+
+    $('#download-btn').click(function(){
+
+    });
 
     // Utility functions
 
@@ -349,6 +378,10 @@ $(document).ready(function () {
 
     function compileCode(){
 
+    }
+
+    function downloadCode(){
+        
     }
 
 });
