@@ -103,7 +103,23 @@
                     <i class="fa fa-custom fa-download fa-3x" id="download-btn" data-toggle="tooltip" title="Download Code"></i>                    
                     {% if request.session.username %}
                     <i class="fa fa-custom fa-save fa-3x" id="save-btn" data-toggle="tooltip" title="Save Code to profile"></i>                        
-                    <i class="fa fa-custom fa-user-circle-o fa-3x" id="profile-btn" title="View Profile"  data-toggle="modal" data-target='#profile-modal'></i>                    
+                    <i class="fa fa-custom fa-user-circle-o fa-3x" id="profile-btn" title="View Profile"  data-toggle="modal" data-target='#profile-modal'></i>  
+                    <div class="modal fade" id="profile-modal" style="width: 100%;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title text-center"> {{ request.session.username }}'s Profile</h4>
+                                </div>
+                                <div class="modal-body">
+                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endif %}      
                 </div>
             </div>            

@@ -26,7 +26,7 @@ SECRET_KEY = 'i=cg+%6q$dr-k#^6fd74^ev&z_d*hq+xj$)9_#f_&k*=px#!s('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [] #'192.168.43.124'
 
 CLIENT_SECRET = config('CLIENT_SECRET', default=' ')
 

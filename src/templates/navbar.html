@@ -16,24 +16,8 @@
 
             {% if 'username' in request.session %}                
                 <li>
-                    <a href="">{{ request.session.username }}</a>
-                </li>
-                <div class="modal fade" id="profile-modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title text-center"> {{ request.session.username }}'s Profile</h4>
-                            </div>
-                            <div class="modal-body">
-                                
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <a style="cursor: pointer;">{{ request.session.username }}</a>
+                </li>                
                 <li>
                     <a href="/"> New Code </a>
                 </li>
@@ -54,18 +38,19 @@
                             </div>
                             <div class="modal-body">                                
                                 <form action="" method="POST" role="form">
+                                     {% csrf_token %}
                                     <div style="color:red;font-size: 20px;" id="register-error" class="text-center"></div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="register-username" placeholder="Username (minimum 5 characters)" autofocus>                                        
+                                        <input type="text" class="my-form form-control" id="register-username" placeholder="Username (minimum 5 characters)" autofocus>                                        
                                     </div>
                                     <div class="form-group">
-                                        <input type="email" class="form-control" id="register-email" placeholder="Email">                                        
+                                        <input type="email" class="my-form form-control" id="register-email" placeholder="Email">                                        
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control" id="register-pass" placeholder="Password">                                    
+                                        <input type="password" class="my-form form-control" id="register-pass" placeholder="Password">                                    
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control" id="register-con-pass" placeholder="Confirm Password">                                    
+                                        <input type="password" class="my-form form-control" id="register-con-pass" placeholder="Confirm Password">                                    
                                     </div>
                                 </form>
                             </div>
@@ -88,11 +73,12 @@
                             </div>
                             <div class="modal-body">                                
                                 <form action="" method="POST" role="form">
+                                    {% csrf_token %}
                                     <div class="form-group">                                        
-                                        <input type="text" class="form-control" id="login-username" placeholder="Username..." required="true" autofocus>
+                                        <input type="text" class="my-form form-control" id="login-username" placeholder="Username..." required="true" autofocus>
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control" id="login-password" placeholder="Password..." required="true">
+                                        <input type="password" class="my-form form-control" id="login-password" placeholder="Password..." required="true">
                                     </div>                                    
                                     <div class="checkbox form-group">
                                         <label>
@@ -105,8 +91,8 @@
                                 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" style="width: 49%">Close</button>
-                                <button type="submit" class="btn btn-lg btn-success" id="login" style="width: 49%">Login</button>
+                                <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" style="width: 48%">Close</button>
+                                <button type="submit" class="btn btn-lg btn-success" id="login" style="width: 48%">Login</button>
                             </div>
                         </div>
                     </div>
