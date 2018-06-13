@@ -249,10 +249,27 @@ $(document).ready(function () {
     initialSnippet['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
     initialSnippet['SCALA'] = "object Main extends App {\n	// your code goes here\n}\n";
 
+    var dom = require("ace/lib/dom");
+    //add command to all new editor instances
+    require("ace/commands/default_commands").commands.push({
+        name: "Toggle Fullscreen",
+        bindKey: "F11",
+        exec: function (editor) {
+            var fullScreen = dom.toggleCssClass(document.body, "fullScreen")
+            dom.setCssClass(editor.container, "fullScreen", fullScreen)
+            editor.setAutoScrollEditorIntoView(!fullScreen)
+            editor.resize()
+        }
+    })
+
     ace.config.set("basePath", "/static/ace-builds/src/");
-    ace.require("ace/ext/language_tools");
+    ace.require("ace/ext/language_tools");    
     var editor = ace.edit("editor");
     var editorContent;
+    var ongoing_request = false;
+
+    COMPILE_URL = '/compile/'
+    RUN_URL = '/run/'
 
 
     editor.session.setMode("ace/mode/python");
@@ -268,9 +285,9 @@ $(document).ready(function () {
         enableLiveAutocompletion: true,
         highlightActiveLine: true, 
         highlightSelectedWord: true, // boolean:
-        autoScrollEditorIntoView: undefined,
+        autoScrollEditorIntoView: true,
         animatedScroll: true,
-        scrollPastEnd: 5,
+        scrollPastEnd: 1,
         scrollSpeed: 5,
         tooltipFollowsMouse: true,
     });
@@ -285,6 +302,40 @@ $(document).ready(function () {
     // var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"))
 
     // Events 
+    
+    editor.getSession().on('change', function (e) {
+        getCurrentContent();
+        if (editorContent != "") {
+            $("#execute-btn").prop('disabled', false);
+            $('#execute-btn').prop('title', "Click to compile code");
+
+            $("#run-btn").prop('disabled', false);
+            $('#run-btn').prop('title', "Click to run code");
+
+            $("#save-btn").css({ 'opacity': 1, 'pointer-events': 'auto', 'cursor': 'pointer' }); 
+            $("#save-btn").prop('title', 'Save Code to profile');
+
+            $("#download-btn").css({ 'opacity': 1, 'pointer-events': 'auto', 'cursor': 'pointer' });
+            $("#download-btn").prop('title', 'Download Code');
+                        
+        }
+        else {
+            $("#execute-btn").prop('disabled', true);
+            $('#execute-btn').prop('title', "No Code to run");
+
+            $("#run-btn").prop('disabled', true);
+            $('#run-btn').prop('title', "No Code to compile");
+
+            $("#save-btn").css({'opacity': 0.6, 'pointer-events': 'none', 'cursor': 'not-allowed'});        
+            $("#save-btn").prop('title', 'No Code to Save');
+            
+            $("#download-btn").css({ 'opacity': 0.6, 'pointer-events': 'none', 'cursor': 'not-allowed', });
+            $("#download-btn").prop('title', 'No Code to download');  
+
+        }
+
+    });
+
     $('#input-checkbox').prop('checked', false);
     $('#input-checkbox').click(function () {
         if ($('#input-checkbox').is(":checked")) {
@@ -306,36 +357,52 @@ $(document).ready(function () {
         editor.setValue(initialSnippet[lang]);
     });
 
-    $('#editor-theme').change(function(){
-        console.log('Changed')
+    $('#editor-theme').change(function () {
         theme = $('#editor-theme').val();
-        console.log(theme)
-        editor.setTheme("ace/theme/"+theme);
-    })
+        editor.setTheme("ace/theme/" + theme);
+    });
 
-    $('#editor-indent').change(function(){
-        console.log('Changed')        
+    $('#editor-indent').change(function () {
         value = $('#editor-indent').val();
         editor.getSession().setTabSize(value);
-    })
+    });
 
-    editor.getSession().on('change', function (e) {
-        getCurrentContent();
-        if (editorContent != "") {
-            $("#compile-btn").prop('disabled', false);
-            $('#compile-btn').prop('title', "Click to compile code");
-            $("#run-btn").prop('disabled', false);
-            $('#run-btn').prop('title', "Click to run code");
-        }
-        else {
-            $("#compile-btn").prop('disabled', true);
-            $('#compile-btn').prop('title', "No Code to run");
-            $("#run-btn").prop('disabled', true);
-            $('#run-btn').prop('title', "No Code to compile");
-        }
+    $('#run-btn').click(function () {
+        runCode();
+    });
+
+    $('#execute-btn').click(function () {
+        executeCode();
+    });
+
+    $('#save-btn').click(function(){
 
     });
 
+    $('#profile-btn').click(function(){
+
+    });
+
+    $('#download-btn').click(function(){
+        getCurrentContent();
+        var content = editorContent;
+        var lang = $('#form-lang').val();
+        var extension = getLangExtension(lang);
+        var fileName
+        bootbox.prompt({
+            title: "Enter desired filename",
+            inputType: 'textarea',
+            callback: function (fileName) {
+                if (fileName != null){
+                    if (fileName == "") {
+                        fileName = "test"
+                    }
+                    fileName = fileName + "." + extension
+                    downloadCode(fileName, content);
+                }
+            }
+        });
+    });
 
     // Utility functions
 
@@ -343,12 +410,71 @@ $(document).ready(function () {
         editorContent = editor.getValue();
     }
 
+    function getLangExtension(lang){
+        return {
+            "C": "c",
+            "CPP": "cpp",
+            "CSHARP": "cs",
+            "CLOJURE": "clj",
+            "CSS": "css",
+            "HASKELL": "hs",
+            "JAVA": "java",
+            "JAVASCRIPT": "js",
+            "OBJECTIVEC": "m",
+            "PERL": "pl",
+            "PHP": "php",
+            "PYTHON": "py",
+            "R": "r",
+            "RUBY": "rb",
+            "RUST": "rs",
+            "SCALA": "scala"
+        }[lang] || "txt";
+        
+    }
+
     function runCode(){
 
     }
 
-    function compileCode(){
+    function executeCode(){
+        console.log('Compile and Run btn')
+        if (ongoing_request){
+            console.log('Ongoing request')
+            return;
+        }
 
+        $('output-box').hide();
+        $('#execute-btn').prop('disabled', true);
+        $('run-btn').prop('disabled', true);
+
+        getCurrentContent();
+        lang = $('#form-lang').val();
+        var form_data = {
+            lang: lang,
+            source: editorContent,
+        };
+
+        ongoing_request = true;
+        console.log('Before AJAX')
+        $.ajax({            
+            type: "POST",
+            url: COMPILE_URL,
+            data: form_data,
+            dataType: "json",
+            success: function (response) {
+                console.log('Success compiling')
+
+            }
+        });
+
+
+    }
+
+    function downloadCode(filename, content){
+        var zip = new JSZip();
+        zip.file(filename, content);
+        var zipContent = zip.generate({type:"blob"})
+        saveAs(zipContent, "CodePro.zip");
     }
 
 });

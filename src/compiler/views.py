@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseForbidden, HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest
 
 import requests
 import json
@@ -8,9 +8,8 @@ import json
 from .models import Code
 from .utils import isPermittedLang, emptySource
 
-# API Endpoints for hackerearth 
+# API Endpoint for hackerearth 
 RUN_URL = 'https://api.hackerearth.com/v3/code/run/'
-COMPILE_URL = 'https://api.hackerearth.com/v3/code/'
 
 CLIENT_SECRET = settings.CLIENT_SECRET
 
@@ -20,50 +19,27 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-def compileCode(request):
+def executeCode(request):
     if request.is_ajax():
+        # source = "print 'Hello World'"
         source = request.POST.get('source')
-        lang = request.POST.get('lang')        
-        isPermittedLang(lang)
-        emptySource(source)
-
+        lang = request.POST.get('lang')
         data = {
-            "client_secret": CLIENT_SECRET,
-            "async": 1,
-            "source": source,
-            "lang": lang,
-        }
-        res = requests.post(COMPILE_URL, data=data)
-        return JsonResponse(res.json(), safe=True)        
-    return HttpResponseBadRequest()
-    
-
-def runCode(request):
-    if request.is_ajax():
-        source = request.POST.get('source')
-        lang = request.POST.get('lang')        
-        isPermittedLang(lang)
-        emptySource(source)
-        
-        time_limit = request.POST.get('time_limit', 5) # Default time limit from the HAckerearth docs
-        memory_limit = request.POST.get('memory_limit', 262144) # Default memory limit from the HAckerearth docs
-
-        data = {
-            "client_secret": CLIENT_SECRET,
-            "async": 1,
-            "source": source,
-            "lang": lang,
-            'time_limit': time_limit,
-            'memory_limit': memory_limit,
+            'client_secret': CLIENT_SECRET,
+            'async': 0,
+            'source': source,
+            'lang': lang,
+            'time_limit': 5,
+            'memory_limit': 262144,
         }
         if 'input' in request.POST:
             data['input'] = request.POST.get('input')
-            code_input = request.POST.get('input')
 
         res = requests.post(RUN_URL, data=data)
-        saveCode(res.json(), source, lang, code_input)
-        return JsonResponse(res.json(), safe=True)        
+        print(res.json())
+        return JsonResponse(res.json(), safe=False)    
     return HttpResponseBadRequest()
+    
 
 def saveCode(res, source, lang, input):
     code_id = res['code_id']
@@ -113,62 +89,3 @@ def viewSavedCode(request, code_id=None):
     }
 
     return render(request, 'index.html', context)
-
-
-
-
-
-
-# compile_data = {
-#     'clientId': 'e09c28f7f3a028713f781da2ba32915a',
-#     'clientSecret': '388ef2e8baa99a6c27098ca90f7e57a4c441759436fcea5b211313e10ee2bd53',        
-#     'script': "print ('Hello World')",
-#     'language': "python3",
-#     "versionIndex": "0",
-# }
-# headers = {
-#     "Content-Type": "application/json"
-# }
-# r = requests.post('https://api.jdoodle.com/v1/execute', data=json.dumps(compile_data), headers=headers)
-# print(r.json())
-
-
-# source = "print ('Hello')"
-# lang = "PYTHON"       
-# # isPermittedLang(lang)
-# # emptySource(source)
-
-# data = {
-#     'client_secret': CLIENT_SECRET,
-#     'async': 0,
-#     'save':1,
-#     'callback': '',
-#     'compressed': 1,
-#     'source': source,
-#     'lang': "PYTHON",
-#     'time_limit': 5,
-#     'memory_limit': 262144,
-# }
-# res = requests.post(COMPILE_URL, data=data)
-# print(res)
-# print(data)
-# print(CLIENT_SECRET)
-# return render(request, 'index.html', {})
-
-# RUN_URL = u'http://api.hackerearth.com/code/run/'
-# CLIENT_SECRET = '4863283d6c174b0d90d29b47f38122f637e10e47'
-
-# source = "import sys;print(sys.path)"
-
-# data = {
-#     'client_secret': CLIENT_SECRET,
-#     'async': 1,
-#     'source': source,
-#     'lang': "PYTHON",
-#     'time_limit': 5,
-#     'memory_limit': 262144,
-# }
-
-# r = requests.post(RUN_URL, data=data)
-# print (r)
-# return HttpResponse()

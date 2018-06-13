@@ -249,11 +249,26 @@ $(document).ready(function () {
     initialSnippet['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
     initialSnippet['SCALA'] = "object Main extends App {\n	// your code goes here\n}\n";
 
+    var dom = require("ace/lib/dom");
+    //add command to all new editor instances
+    require("ace/commands/default_commands").commands.push({
+        name: "Toggle Fullscreen",
+        bindKey: "F11",
+        exec: function (editor) {
+            var fullScreen = dom.toggleCssClass(document.body, "fullScreen")
+            dom.setCssClass(editor.container, "fullScreen", fullScreen)
+            editor.setAutoScrollEditorIntoView(!fullScreen)
+            editor.resize()
+        }
+    })
+
     ace.config.set("basePath", "/static/ace-builds/src/");
-    ace.require("ace/ext/language_tools");
+    ace.require("ace/ext/language_tools");    
     var editor = ace.edit("editor");
     var editorContent;
+    var ongoing_request = false;
 
+    COMPILE_URL = '/execute/'
 
     editor.session.setMode("ace/mode/python");
     editor.setTheme("ace/theme/chrome");
@@ -268,7 +283,7 @@ $(document).ready(function () {
         enableLiveAutocompletion: true,
         highlightActiveLine: true, 
         highlightSelectedWord: true, // boolean:
-        autoScrollEditorIntoView: undefined,
+        autoScrollEditorIntoView: true,
         animatedScroll: true,
         scrollPastEnd: 1,
         scrollSpeed: 5,
@@ -280,20 +295,17 @@ $(document).ready(function () {
 
     $('#editor-theme').val('chrome');
     $('#editor-indent').val('4');
+    $('#form-lang').val('PYTHON');
+    $('#test-input').val('');
     
-    // var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
-    // var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"))
 
     // Events 
     
     editor.getSession().on('change', function (e) {
         getCurrentContent();
         if (editorContent != "") {
-            $("#compile-btn").prop('disabled', false);
-            $('#compile-btn').prop('title', "Click to compile code");
-
-            $("#run-btn").prop('disabled', false);
-            $('#run-btn').prop('title', "Click to run code");
+            $("#execute-btn").prop('disabled', false);
+            $('#execute-btn').prop('title', "Click to execute code");
 
             $("#save-btn").css({ 'opacity': 1, 'pointer-events': 'auto', 'cursor': 'pointer' }); 
             $("#save-btn").prop('title', 'Save Code to profile');
@@ -303,11 +315,8 @@ $(document).ready(function () {
                         
         }
         else {
-            $("#compile-btn").prop('disabled', true);
-            $('#compile-btn').prop('title', "No Code to run");
-
-            $("#run-btn").prop('disabled', true);
-            $('#run-btn').prop('title', "No Code to compile");
+            $("#execute-btn").prop('disabled', true);
+            $('#execute-btn').prop('title', "No Code to execute");
 
             $("#save-btn").css({'opacity': 0.6, 'pointer-events': 'none', 'cursor': 'not-allowed'});        
             $("#save-btn").prop('title', 'No Code to Save');
@@ -350,12 +359,9 @@ $(document).ready(function () {
         editor.getSession().setTabSize(value);
     });
 
-    $('#run-btn').click(function () {
-        runCode();
-    });
 
-    $('#compile-btn').click(function () {
-        compileCode();
+    $('#execute-btn').click(function () {
+        executeCode();
     });
 
     $('#save-btn').click(function(){
@@ -415,11 +421,111 @@ $(document).ready(function () {
         
     }
 
-    function runCode(){
+    function executeCode(){
+        if (ongoing_request){
+            return;
+        }
 
-    }
+        $('.output-box').hide();
+        $('#execute-btn').prop('disabled', true);
 
-    function compileCode(){
+        getCurrentContent();
+        lang = $('#form-lang').val();
+        if ($('#input-checkbox').prop('checked') == true){
+            var input = $('#test-input').val();
+            var form_data = {
+                lang: lang,
+                source: editorContent,
+                input: input,
+            }
+        }
+        else{
+            var form_data = {
+                lang: lang,
+                source: editorContent,
+            };
+        }
+
+        ongoing_request = true;
+        $.ajax({            
+            type: "POST",
+            url: COMPILE_URL,
+            data: form_data,
+            dataType: "json",
+            success: function (response) {
+                ongoing_request = false;
+                $('#execute-btn').prop('disabled', false);
+                $('.output-box').show();
+                
+                if(response.run_status.status == 'AC'){
+                    $('html, body').animate({
+                        scrollTop: $(".output").offset().top
+                    }, 1000);
+
+                    $('.i-info').show();
+                    $('.o-info').show();
+                    $('.output-error').hide();
+                    
+                    if ($('#input-checkbox').prop('checked') == true) {
+                        $('.output-i').html($('#test-input').val());
+                        $('.output-i-message').hide();
+                    }
+                    else{
+                        $('.output-i-message').show();
+                        $('.output-i').hide();
+                    }
+                    $('.run-status .value').html(response.run_status.status)
+                    $('.compile-status .value').html(response.compile_status)
+                    $('.time-sec .value').html(response.run_status.time_used)
+                    $('.memory-kb .value').html(response.run_status.memory_used)
+                    if (response.run_status.output === '\n') {
+                        $('.output-o-message').show();
+                        $('.output-o').hide();
+                    }
+                    else {
+                        $('.output-o').html(response.run_status.output_html)
+                    }
+                    
+                }
+                else{
+                    $('html, body').animate({
+                        scrollTop: $(".output").offset().top
+                    }, 1000);
+
+                    $(".output-error").show();
+                    $(".compile-status .value").html("CE")
+                    $(".run-status .value").html(response.run_status.status)
+                    $(".time-sec .value").html('0.0 sec')
+                    $(".memory-kb .value").html('0 kb')
+                    $('.i-info').hide();
+                    $('.o-info').hide();
+
+                    if (response.run_status.status == "TLE") {
+                        $(".error-key").html("Timeout error");
+                        $(".error-message").html("Time limit exceeded.");
+                    } 
+                    else if (response.run_status.status == "MLE") {
+                        $(".error-key").html("Memory limit error");
+                        $(".error-message").html("Memory limit exceeded");
+                    }
+                    else {
+                        $(".error-key").html("Run-time error (stderr)");
+                        $(".error-message").html(response.run_status.status_detail);
+                    }
+                }
+                
+            },
+            error: function (jqXHR, textStatus){
+                console.log(jqXHR);
+                console.log(textStatus);
+                ongoing_request = false;
+                $('.output-status').hide();
+                $('.i-info').hide();
+                $('.o-info').hide();
+                $('.error-key').html('Server Error :(');
+                $('.error-message').html('Contact Administrator for further details')
+            }
+        });
 
     }
 

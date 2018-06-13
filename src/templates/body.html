@@ -17,17 +17,13 @@
                             <option value="OBJECTIVEC">Objective-C (clang 3.3)</option>
                             <option value="PERL">Perl (perl 5.14.2)</option>
                             <option value="PHP">PHP (php 5.3.10)</option>
-                            <option value="PYTHON" selected>Python (python 2.7.3)</option>
+                            <option value="PYTHON" selected>Python (python 3.5)</option>
                             <option value="R">R (RScript 2.14.1)</option>
                             <option value="RUBY">Ruby (ruby 2.1.1)</option>
                             <option value="RUST">Rust (rustc 1.4.0)</option>
                             <option value="SCALA">Scala (scalac 2.9.1)</option>
                         </select>
                     </div>
-                    <!-- <div style="float: right;">
-                        <h4>Temporary</h4>
-                        <i class="fa fa-expand-arrows-alt"></i>
-                    </div> -->
                 </div>
                 <pre id="editor"></pre>
                 <div class="test-input-check">
@@ -41,11 +37,7 @@
                 </div>
                                     
                 <div class="buttons">                    
-                    <!-- {% if request.session.username %}
-                    <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="tooltip" title="Click to save code">Save</button>                        
-                    {% endif %}                         -->
-                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Click to compile code" id="compile-btn">Compile</button>                    
-                    <button type="button" class="btn btn-success" data-toggle="tooltip" title="Click to run code" id="run-btn">Run</button>
+                    <button type="button" class="btn btn-info" data-toggle="tooltip" title="Click to execute code" id="execute-btn">Compile & Run</button>                    
                 </div>
                 
             </div>            
