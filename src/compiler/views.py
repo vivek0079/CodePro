@@ -65,30 +65,48 @@ def saveCode(request):
     else:
         return HttpResponseBadRequest()
 
+def profile(request):
+    if request.is_ajax():
+        username = request.session['username']
+        print(username)
+        qs = Code.objects.filter(owner__iexact=username)
+        code_id = []
+        code_name = []
+        code_timestamp = []
+        for obj in qs:
+            code_id.append(obj.id)
+            code_name.append(obj.name)
+            code_timestamp.append(obj.timestamp)
+        print(code_id)
+        print(code_name)
+        res = {
+            'code_id': code_id,
+            'code_name': code_name,
+            'code_timestamp': code_timestamp,
+        }
+        return JsonResponse(res, safe=False)
+    return HttpResponseBadRequest()
 
-def viewSavedCode(request, code_id=None):
-    # result = codes.objects.get(id=code_id).first()
-    # result = result.to_json()
-    # result = json.loads(result)
 
-    # content = result['content']
-    # lang = result['language']
-    # input = result['input']
-    # compile_status = result['compile_status']
-    # run_status = result['run_status']
-    # run_time = result['run_time']
-    # run_memory = result['run_memory']
-    # run_output = result['run_output']
+def deleteCode(request):
+    if request.is_ajax():
+        code_id = request.POST.get('id')
+        user = request.session['username']
+        obj = Code.objects.filter(id__iexact=code_id).filter(owner__iexact=user).first()
+        print(obj)
+        obj.delete()
+        return JsonResponse({}, safe=False)
+    return HttpResponseBadRequest()
 
-    # context = {
-    #     'content': content,
-    #     'lang': lang,
-    #     'inp': input,
-    #     'compile_status': compile_status,
-    #     'run_status': run_status,
-    #     'run_time': run_time,
-    #     'run_output': run_output,
-    #     'run_memory': run_memory,
-    # }
-
-    return render(request, 'index.html', context)
+def viewSavedCode(request):
+    if request.is_ajax():
+        code_id = request.POST.get('id')
+        obj = Code.objects.filter(id__iexact=code_id).first()
+        content = obj.content
+        title = obj.name
+        res = {
+            'content': content,
+            'title': title,
+        }
+        return JsonResponse(res, safe=False)
+    return HttpResponseBadRequest()

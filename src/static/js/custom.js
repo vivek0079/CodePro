@@ -267,9 +267,11 @@ $(document).ready(function () {
     var editor = ace.edit("editor");
     var editorContent;
     var ongoing_request = false;
+    var profile_flag = true;
 
     COMPILE_URL = '/execute/'
     SAVE_URL = '/save/'
+    PROFILE_URL = '/profile/'
 
     editor.session.setMode("ace/mode/python");
     editor.setTheme("ace/theme/chrome");
@@ -300,7 +302,7 @@ $(document).ready(function () {
     $('#test-input').val('');
     
 
-    // Events 
+    // Events of DOM
     
     editor.getSession().on('change', function (e) {
         getCurrentContent();
@@ -373,7 +375,7 @@ $(document).ready(function () {
         var codeName;
         bootbox.prompt({
             title: "Enter desired filename",
-            inputType: 'textarea',
+            inputType: 'text',
             callback: function (codeName) {
                 if (codeName != null) {
                     if (codeName == "") {
@@ -388,8 +390,39 @@ $(document).ready(function () {
     });
 
     $('#profile-btn').click(function(){
-
+        if(profile_flag){
+            showProfile();
+            profile_flag = false;
+        }
     });
+    
+    $(document).on("click", "#code-delete-btn", function (event) {
+        var code_id = $(this).attr('value')
+        deleteCode(code_id);
+    })
+
+    $(document).on("click", "#show-code", function (event) {
+        var code_id = $(this).html()
+        console.log(code_id);
+        form_data = {
+            id: code_id,
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/viewcode/',
+            data: form_data,
+            dataType: 'json',
+            success: function(response){
+                console.log("CODE STUB")
+                console.log(response)
+                $('#code-stub').html(response.content)
+                $('#code-title').html(response.title)
+            },
+            error: function(jqXHR, textStatus){
+                console.log(jqXHR)
+            }
+        })
+    })
 
     $('#download-btn').click(function(){
         getCurrentContent();
@@ -399,7 +432,7 @@ $(document).ready(function () {
         var fileName
         bootbox.prompt({
             title: "Enter desired filename",
-            inputType: 'textarea',
+            inputType: 'text',
             callback: function (fileName) {
                 if (fileName != null){
                     if (fileName == "") {
@@ -412,7 +445,7 @@ $(document).ready(function () {
         });
     });
 
-    // Utility functions
+    // Utility functions for DOM Manipulation
 
     function getCurrentContent(){
         editorContent = editor.getValue();
@@ -438,6 +471,143 @@ $(document).ready(function () {
             "SCALA": "scala"
         }[lang] || "txt";
         
+    }
+
+    function deleteCode(code_id) {
+        bootbox.confirm({
+            title: "Delete Code",
+            message: "Do you want to delete the code stub? This cannot be undone.",
+            buttons: {
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: '<i class="fa fa-times"></i> No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    form_data = {
+                        id: code_id,
+                    }
+                    $.ajax({
+                        url: '/delete/',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: form_data,
+                        success: function (response) {
+                            console.log("Deleted")
+                            $.toast({
+                                text: "Code Deleted",
+                                heading: 'Success',
+                                icon: 'success',
+                                showHideTransition: 'fade',
+                                allowToastClose: true,
+                                hideAfter: 400,
+                                stack: false,
+                                position: 'top-center',
+                                textAlign: 'center',
+                                loader: true,
+                                loaderBg: '#9EC600',
+                                beforeHide: function () {
+                                    location.reload();
+                                }
+                            });
+                        },
+                        error: function (jqXHR, textStatus) {
+                            console.log(textStatus)
+                        }
+                    })
+                }
+            }
+        });
+    }
+    
+
+    function showProfile(){
+        $.ajax({
+            type:  "POST",
+            url: PROFILE_URL,
+            data: {},
+            dataType: 'json',
+            success: function(response){
+                console.log("SUCCESS")
+                if ((response.code_id).length != 0){
+                    for(var i=0; i<(response.code_id).length; i++){
+                        $('#table_body').append('<tr><td><a id="show-code" data-toggle="modal" href="#code-modal">' + response.code_id[i] + '</a></td>'+
+                        '<td><a style="cursor:pointer;">' + response.code_name[i] + '</a></td>'+
+                        '<td>' + response.code_timestamp[i] + '</td>'+
+                        '<td><span class="fa fa-trash fa-2x" style="float:right;cursor:pointer" data-toggle="tooltip" title="Delete Code" id="code-delete-btn" value="' + response.code_id[i] +'"></span></td></tr>')
+                    }
+                }
+                else{
+                    $('#table_body').html('<tr><td>Oops!!!Save code to view them.</td></tr>')
+                }
+            },
+            error: function(jqXHR, textStatus){
+                console.log(textStatus)
+            }
+
+        });
+    }
+
+    function downloadCode(filename, content) {
+        var zip = new JSZip();
+        zip.file(filename, content);
+        var zipContent = zip.generate({ type: "blob" })
+        saveAs(zipContent, "CodePro.zip");
+    }
+
+    function saveCode(content, lang, codeName) {
+        if ($('#input-checkbox').prop('checked') == true) {
+            var input = $('#test-input').val();
+            var form_data = {
+                content: content,
+                lang: lang,
+                codeName: codeName,
+                input: input,
+            }
+        }
+        else {
+            form_data = {
+                content: content,
+                lang: lang,
+                codeName: codeName,
+                input: "None",
+            }
+        }
+        console.log(form_data)
+        $.ajax({
+            type: "POST",
+            url: SAVE_URL,
+            data: form_data,
+            dataType: 'json',
+            success: function () {
+                $.toast({
+                    text: "Code Saved Successfully",
+                    heading: 'Success',
+                    icon: 'success',
+                    showHideTransition: 'fade',
+                    allowToastClose: true,
+                    hideAfter: 3000,
+                    stack: false,
+                    position: 'top-center',
+                    textAlign: 'center',
+                    loader: true,
+                    loaderBg: '#9EC600',
+                    // beforeHide: function () {
+                    //     location.reload();
+                    // }
+                });
+            },
+            error: function (jqXHR, textStatus) {
+                console.log("ERROR")
+                console.log(jqXHR)
+                console.log(textStatus)
+            }
+        });
     }
 
     function executeCode(){
@@ -546,63 +716,6 @@ $(document).ready(function () {
             }
         });
 
-    }
-
-    function downloadCode(filename, content){
-        var zip = new JSZip();
-        zip.file(filename, content);
-        var zipContent = zip.generate({type:"blob"})
-        saveAs(zipContent, "CodePro.zip");
-    }
-
-    function saveCode(content, lang, codeName){
-        if ($('#input-checkbox').prop('checked') == true) {
-            var input = $('#test-input').val();
-            var form_data = {
-                content: content,
-                lang: lang,
-                codeName: codeName,
-                input: input,
-            }
-        }
-        else {
-            form_data = {
-                content: content,
-                lang: lang,
-                codeName: codeName,
-                input: "None",
-            }
-        }
-        console.log(form_data)
-        $.ajax({
-            type: "POST",
-            url: SAVE_URL,
-            data: form_data,
-            dataType: 'json',
-            success:function(){
-                $.toast({
-                    text: "Code Saved Successfully",
-                    heading: 'Success',
-                    icon: 'success',
-                    showHideTransition: 'fade',
-                    allowToastClose: true,
-                    hideAfter: 3000,
-                    stack: false,
-                    position: 'top-center',
-                    textAlign: 'center',
-                    loader: true,
-                    loaderBg: '#9EC600',
-                    // beforeHide: function () {
-                    //     location.reload();
-                    // }
-                });
-            },
-            error:function(jqXHR, textStatus){
-                console.log("ERROR")
-                console.log(jqXHR)
-                console.log(textStatus)
-            }
-        });
     }
 
 });

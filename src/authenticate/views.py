@@ -65,20 +65,6 @@ def logoutUser(request):
         return HttpResponseBadRequest()
 
 
-def removefromProfile(request):
-    if request.is_ajax():        
-        return JsonResponse({}, safe=False)
-    else:
-        return HttpResponseBadRequest()
-                    
-                
-
-def viewProfile(request):
-    if request.is_ajax():
-        
-        return JsonResponse(res, safe=False)
-    return HttpResponseBadRequest()
-
 # Utility func.
 def userExists(request):
     if request.is_ajax():

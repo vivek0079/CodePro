@@ -103,11 +103,36 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h4 class="modal-title text-center"> {{ request.session.username }}'s Profile</h4>
                                 </div>
-                                <div class="modal-body">
-                    
+                                <div class="modal-body">                                    
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Code ID</th>
+                                                <th>Code Name</th>
+                                                <th>Timestamp</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table_body">
+                                        </tbody>
+                                    </table>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="code-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="code-title"></h4>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
+                                <div class="modal-body">
+                                    <pre id="code-stub"></pre>
                                 </div>
                             </div>
                         </div>
