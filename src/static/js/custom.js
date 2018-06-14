@@ -269,6 +269,7 @@ $(document).ready(function () {
     var ongoing_request = false;
 
     COMPILE_URL = '/execute/'
+    SAVE_URL = '/save/'
 
     editor.session.setMode("ace/mode/python");
     editor.setTheme("ace/theme/chrome");
@@ -365,7 +366,25 @@ $(document).ready(function () {
     });
 
     $('#save-btn').click(function(){
-
+        console.log("In save function")
+        getCurrentContent();
+        var content = editorContent;
+        var lang = $('#form-lang').val();
+        var codeName;
+        bootbox.prompt({
+            title: "Enter desired filename",
+            inputType: 'textarea',
+            callback: function (codeName) {
+                if (codeName != null) {
+                    if (codeName == "") {
+                        codeName = "sample"
+                    }
+                    codeName = codeName
+                    saveCode(content, lang, codeName)
+                }
+            }
+        });
+        
     });
 
     $('#profile-btn').click(function(){
@@ -534,6 +553,56 @@ $(document).ready(function () {
         zip.file(filename, content);
         var zipContent = zip.generate({type:"blob"})
         saveAs(zipContent, "CodePro.zip");
+    }
+
+    function saveCode(content, lang, codeName){
+        if ($('#input-checkbox').prop('checked') == true) {
+            var input = $('#test-input').val();
+            var form_data = {
+                content: content,
+                lang: lang,
+                codeName: codeName,
+                input: input,
+            }
+        }
+        else {
+            form_data = {
+                content: content,
+                lang: lang,
+                codeName: codeName,
+                input: "None",
+            }
+        }
+        console.log(form_data)
+        $.ajax({
+            type: "POST",
+            url: SAVE_URL,
+            data: form_data,
+            dataType: 'json',
+            success:function(){
+                $.toast({
+                    text: "Code Saved Successfully",
+                    heading: 'Success',
+                    icon: 'success',
+                    showHideTransition: 'fade',
+                    allowToastClose: true,
+                    hideAfter: 3000,
+                    stack: false,
+                    position: 'top-center',
+                    textAlign: 'center',
+                    loader: true,
+                    loaderBg: '#9EC600',
+                    // beforeHide: function () {
+                    //     location.reload();
+                    // }
+                });
+            },
+            error:function(jqXHR, textStatus){
+                console.log("ERROR")
+                console.log(jqXHR)
+                console.log(textStatus)
+            }
+        });
     }
 
 });
