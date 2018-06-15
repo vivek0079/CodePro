@@ -1,7 +1,8 @@
 $(document).ready(function () {
     console.log("Welcome to CodePro | Awesome Code Compiler")
     
-
+    // Authentication related events
+    
     $('#login').on('click', function (e) { 
         var username = $('#login-username').val();
         var password = $('#login-password').val();
@@ -223,6 +224,60 @@ $(document).ready(function () {
         }
         
     });
+
+    // Check internet connection
+
+    var connec_true = true
+    var connec_false = true
+    function checkConnection() {
+        $.ajax({
+            type: 'POST',
+            url: '/checker/',
+            data: {},
+            dataType: 'json',
+            timeout: 10000,
+            success: function (response) {
+                if (response.flag == true) {
+                    if (connec_true == true) {
+                        $.toast({
+                            text: "You are connected",
+                            heading: 'Success',
+                            icon: 'success',
+                            showHideTransition: 'fade',
+                            allowToastClose: true,
+                            hideAfter: 3000,
+                            stack: false,
+                            position: 'top-center',
+                            textAlign: 'center',
+                            loader: true,
+                            loaderBg: '#9EC600',
+                        });
+                        connec_true = false
+                        connec_false = true
+                    }
+                }
+                else {
+                    if (connec_false == true) {
+                        $.toast({
+                            text: "Check you internet connection",
+                            heading: 'Warning',
+                            icon: 'warning',
+                            allowToastClose: true,
+                            hideAfter: false,
+                            stack: false,
+                            position: 'top-center',
+                            textAlign: 'center',
+                            loader: true,
+                            loaderBg: '#9EC600',
+                        });
+                        connec_false = false
+                        connec_true = true
+                    }
+                }
+            }
+        })
+    };
+    setInterval(checkConnection, 3000);
 
 
     // Ace-builds code

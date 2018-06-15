@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from .views import registerUser, loginUser, logoutUser, userExists
 
-
 app_name = 'authenticate'
 
 urlpatterns = [    

@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 
 import requests
 import json
+import urllib
 
 from authenticate.models import User
 from .models import Code
@@ -20,9 +21,9 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+
 def executeCode(request):
     if request.is_ajax():
-        # source = "print 'Hello World'"
         source = request.POST.get('source')
         lang = request.POST.get('lang')
         data = {
@@ -37,10 +38,29 @@ def executeCode(request):
             data['input'] = request.POST.get('input')
 
         res = requests.post(RUN_URL, data=data)
-        print(res.json())
         return JsonResponse(res.json(), safe=False)    
     return HttpResponseBadRequest()
     
+
+def profile(request):
+    if request.is_ajax():
+        username = request.session['username']
+        qs = Code.objects.filter(owner__iexact=username)
+        code_id = []
+        code_name = []
+        code_timestamp = []
+        for obj in qs:
+            code_id.append(obj.id)
+            code_name.append(obj.name)
+            code_timestamp.append(obj.timestamp)
+        res = {
+            'code_id': code_id,
+            'code_name': code_name,
+            'code_timestamp': code_timestamp,
+        }
+        return JsonResponse(res, safe=False)
+    return HttpResponseBadRequest()
+
 
 def saveCode(request):
     if request.is_ajax():
@@ -65,38 +85,16 @@ def saveCode(request):
     else:
         return HttpResponseBadRequest()
 
-def profile(request):
-    if request.is_ajax():
-        username = request.session['username']
-        print(username)
-        qs = Code.objects.filter(owner__iexact=username)
-        code_id = []
-        code_name = []
-        code_timestamp = []
-        for obj in qs:
-            code_id.append(obj.id)
-            code_name.append(obj.name)
-            code_timestamp.append(obj.timestamp)
-        print(code_id)
-        print(code_name)
-        res = {
-            'code_id': code_id,
-            'code_name': code_name,
-            'code_timestamp': code_timestamp,
-        }
-        return JsonResponse(res, safe=False)
-    return HttpResponseBadRequest()
-
 
 def deleteCode(request):
     if request.is_ajax():
         code_id = request.POST.get('id')
         user = request.session['username']
         obj = Code.objects.filter(id__iexact=code_id).filter(owner__iexact=user).first()
-        print(obj)
         obj.delete()
         return JsonResponse({}, safe=False)
     return HttpResponseBadRequest()
+
 
 def viewSavedCode(request):
     if request.is_ajax():
@@ -107,6 +105,21 @@ def viewSavedCode(request):
         res = {
             'content': content,
             'title': title,
+        }
+        return JsonResponse(res, safe=False)
+    return HttpResponseBadRequest()
+
+
+# Utility function
+def checkConnection(request):
+    if request.is_ajax():
+        try:
+            urllib.request.urlopen('http://www.google.co.in', timeout=2)
+            flag = True
+        except: 
+            flag = False
+        res = {
+            'flag': flag,
         }
         return JsonResponse(res, safe=False)
     return HttpResponseBadRequest()

@@ -6,6 +6,7 @@ import json
 
 from .models import User
 
+
 def loginUser(request):
     if request.is_ajax():
         username = request.POST.get('username')
@@ -65,7 +66,7 @@ def logoutUser(request):
         return HttpResponseBadRequest()
 
 
-# Utility func.
+# Utility func. to check whether user exists
 def userExists(request):
     if request.is_ajax():
         username = request.GET.get('username')
