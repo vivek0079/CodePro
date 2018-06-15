@@ -103,11 +103,15 @@ pre {
 }
 
 .fa-custom{
-    padding-right:50px;cursor: pointer;
+    padding-right:50px;
+    cursor: pointer;
+}
+
+.fa-heart{
+    color: red;
 }
 
 .output{
-    background:lightblue;
     margin-top:20px;
     border-radius: 10px;
 }
@@ -149,3 +153,31 @@ pre {
 .my-form{
     width: 100%;
 }
+
+.grow { 
+    transition: all .5s ease-in-out; 
+}
+
+.grow:hover { 
+    transform: scale(1.5); 
+}
+
+.navbar-default{
+    padding-top:5px;
+    padding-bottom: 5px;
+}
+
+.navbar-right{
+    font-size: large;
+}
+
+#my-logo{
+    font-size: large;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+hr{
+    border-color: black;
+}
+

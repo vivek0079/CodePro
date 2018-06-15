@@ -240,12 +240,12 @@ $(document).ready(function () {
                 if (response.flag == true) {
                     if (connec_true == true) {
                         $.toast({
-                            text: "You are connected",
-                            heading: 'Success',
+                            text: "You are connected to the internet",
+                            heading: 'Connection established',
                             icon: 'success',
                             showHideTransition: 'fade',
                             allowToastClose: true,
-                            hideAfter: 3000,
+                            hideAfter: 2000,
                             stack: false,
                             position: 'top-center',
                             textAlign: 'center',
@@ -646,15 +646,15 @@ $(document).ready(function () {
                     icon: 'success',
                     showHideTransition: 'fade',
                     allowToastClose: true,
-                    hideAfter: 3000,
+                    hideAfter: 2000,
                     stack: false,
                     position: 'top-center',
                     textAlign: 'center',
                     loader: true,
                     loaderBg: '#9EC600',
-                    // beforeHide: function () {
-                    //     location.reload();
-                    // }
+                    beforeHide: function () {
+                        location.reload();
+                    }
                 });
             },
             error: function (jqXHR, textStatus) {

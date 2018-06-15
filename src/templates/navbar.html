@@ -1,4 +1,5 @@
-<nav class="navbar navbar-default" role="navigation">
+{% load staticfiles %}
+<nav class="navbar navbar-default" role="navigation" style="background: rgb(243, 243, 243)">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -7,7 +8,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Code Pro | Code Compiler</a>
+        <a class="navbar-left" id="my-logo"><img src="{% static 'img/CodePro-logo.png' %}" alt="" style="height: 51px;width: 200px;padding-left: 20px;"> | Online Compiler</a>
     </div>
 
     <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -15,7 +16,7 @@
 
             {% if 'username' in request.session %}                
                 <li>
-                    <a style="cursor: pointer;">{{ request.session.username }}</a>
+                    <a style="cursor: pointer;" >{{ request.session.username }}</a>
                 </li>                
                 <li>
                     <a href="/"> New Code </a>

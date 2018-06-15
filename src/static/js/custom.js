@@ -240,7 +240,7 @@ $(document).ready(function () {
                 if (response.flag == true) {
                     if (connec_true == true) {
                         $.toast({
-                            text: "You are connected",
+                            text: "You are connected to the internet",
                             heading: 'Connection established',
                             icon: 'success',
                             showHideTransition: 'fade',
