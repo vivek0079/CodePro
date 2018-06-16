@@ -162,19 +162,17 @@ pre {
     transform: scale(1.5); 
 }
 
-.navbar-default{
-    padding-top:5px;
-    padding-bottom: 5px;
-}
-
-.navbar-right{
-    font-size: large;
-}
-
 #my-logo{
     font-size: large;
     text-decoration: none;
     cursor: pointer;
+    margin-top:15px;
+}
+
+#logo-img{
+    height: 30px;
+    width: 150;
+    margin-left: 20px;
 }
 
 hr{

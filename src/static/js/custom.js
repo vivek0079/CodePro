@@ -98,7 +98,6 @@ $(document).ready(function () {
         var username = $('#register-username').val();
         var email = $('#register-email').val();
         var password = $('#register-pass').val();
-
         form_data = {
             username: username,
             email: email,
@@ -155,6 +154,16 @@ $(document).ready(function () {
         $('#register-pass').val('');
         $('#register-con-pass').val('');        
         $('#register-error').val('');        
+    });
+
+    $(window).on('load', function () {
+        $("#login-username").val('');
+        $('#login-password').val('');
+        $("#register-username").val('');
+        $('#register-email').val('');
+        $('#register-pass').val('');
+        $('#register-con-pass').val('');
+        $('#register-error').val('');
     });
 
     // Validation part
@@ -340,7 +349,7 @@ $(document).ready(function () {
         enableSnippets: true,
         enableLiveAutocompletion: true,
         highlightActiveLine: true, 
-        highlightSelectedWord: true, // boolean:
+        highlightSelectedWord: true, 
         autoScrollEditorIntoView: true,
         animatedScroll: true,
         scrollPastEnd: 1,
@@ -423,7 +432,6 @@ $(document).ready(function () {
     });
 
     $('#save-btn').click(function(){
-        console.log("In save function")
         getCurrentContent();
         var content = editorContent;
         var lang = $('#form-lang').val();
@@ -458,7 +466,6 @@ $(document).ready(function () {
 
     $(document).on("click", "#show-code", function (event) {
         var code_id = $(this).html()
-        console.log(code_id);
         form_data = {
             id: code_id,
         }
@@ -468,10 +475,9 @@ $(document).ready(function () {
             data: form_data,
             dataType: 'json',
             success: function(response){
-                console.log("CODE STUB")
-                console.log(response)
                 $('#code-stub').html(response.content)
-                $('#code-title').html(response.title)
+                $('#code-lang').html('LANGUAGE: ' + response.lang)
+                $('#code-title').html('TITLE: ' + response.title)
             },
             error: function(jqXHR, textStatus){
                 console.log(jqXHR)
@@ -553,7 +559,6 @@ $(document).ready(function () {
                         dataType: 'json',
                         data: form_data,
                         success: function (response) {
-                            console.log("Deleted")
                             $.toast({
                                 text: "Code Deleted",
                                 heading: 'Success',
@@ -588,7 +593,6 @@ $(document).ready(function () {
             data: {},
             dataType: 'json',
             success: function(response){
-                console.log("SUCCESS")
                 if ((response.code_id).length != 0){
                     for(var i=0; i<(response.code_id).length; i++){
                         $('#table_body').append('<tr><td><a id="show-code" data-toggle="modal" href="#code-modal">' + response.code_id[i] + '</a></td>'+
@@ -633,7 +637,6 @@ $(document).ready(function () {
                 input: "None",
             }
         }
-        console.log(form_data)
         $.ajax({
             type: "POST",
             url: SAVE_URL,
@@ -658,7 +661,6 @@ $(document).ready(function () {
                 });
             },
             error: function (jqXHR, textStatus) {
-                console.log("ERROR")
                 console.log(jqXHR)
                 console.log(textStatus)
             }
@@ -710,7 +712,7 @@ $(document).ready(function () {
                     $('.o-info').show();
                     $('.output-error').hide();
                     
-                    if ($('#input-checkbox').prop('checked') == true) {
+                    if ($('#input-checkbox').is(":checked")) {
                         $('.output-i').html($('#test-input').val());
                         $('.output-i-message').hide();
                     }

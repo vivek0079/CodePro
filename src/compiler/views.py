@@ -102,9 +102,11 @@ def viewSavedCode(request):
         obj = Code.objects.filter(id__iexact=code_id).first()
         content = obj.content
         title = obj.name
+        lang = obj.language
         res = {
             'content': content,
             'title': title,
+            'lang': lang,
         }
         return JsonResponse(res, safe=False)
     return HttpResponseBadRequest()
