@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'CodePro.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'codepro',
+        'USER': config('DB_USERNAME', default=' '),
+        'PASSWORD': config('DB_PASSWORD', default=' '),
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
