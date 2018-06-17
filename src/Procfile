@@ -1,1 +1,1 @@
-web: gunicorn CodePro.wsgi --log-file -
+web: gunicorn CodePro.wsgi --log-file - 
